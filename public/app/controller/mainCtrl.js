@@ -4,14 +4,15 @@ angular.module('mainController', ['authService'])
 
         $rootScope.$on('$routeChangeStart', function () {
             if (Auth.isLoggedIn()) {
-                console.log('success:user is logged in');
+
+                app.isLoggedIn = true;
                 Auth.getUser().then(function (data) {
                     console.log(data.data.username);
                     app.username = data.data.username;
                 })
             }
             else {
-                console.log('failure:user is not logged in');
+                app.isLoggedIn = false;
                 app.username = '';
             }
         });

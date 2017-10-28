@@ -1,35 +1,40 @@
 <div class="page-header">
-        <h1>Login</h1>
-    </div>
+    <h1>Login</h1>
+</div>
+
+<form ng-submit="main.doLogin(loginData);">
     
-    <form ng-submit="main.doLogin(loginData);">
-        <!--Email -->
-        <label>Username :</label>
-        <input class="form-control" type="text" name="username" placeholder="Pleas enter username / email" ng-model="main.loginData.username">
-        <br>
-    
-        <!--Password -->
-        <label>Password :</label>
-        <input class="form-control" type="password" name="password" placeholder="Please enter password" ng-model="main.loginData.password">
-        <br>
-    
-        <button class="btn btn-primary" type="submit">Login</button>
-    
-    </form>
+    <label>Username :</label>
+    <input class="form-control" type="text" name="username" placeholder="Pleas enter username / email" ng-model="main.loginData.username">
     <br>
-    <div class="jumbotron text-center" ng-show="main.loading">
-        <h4>
-            <span class="glyphicon glyphicon-repeat spinner">
-                Loading....
-            </span>
-        </h4>
-    </div>
-    <br>
-    <div class="row show-hide-message" ng-show="main.succMsg">
-        <div class="alert alert-success">{{main.succMsg}}</div>
-    </div>
-    <br>
+
     
-    <div class="row show-hide-message" ng-show="main.errMsg">
-        <div class="alert alert-danger">{{main.errMsg}}</div>
+    <label>Password :</label>
+    <input class="form-control" type="password" name="password" placeholder="Please enter password" ng-model="main.loginData.password">
+    <br>
+
+    <button class="btn btn-primary" type="submit">Login</button>
+
+    <div class="reset">
+        <a href="/resetpassword">
+            <button type="button" class="btn btn-danger">Forgot Password</button>
+        </a>
     </div>
+</form>
+<br>
+<div class="jumbotron text-center" ng-show="main.loading">
+    <h4>
+        <span class="glyphicon glyphicon-repeat spinner">
+            Loading....
+        </span>
+    </h4>
+</div>
+<br>
+<div class="row show-hide-message" ng-show="main.succMsg">
+    <div class="alert alert-success">{{main.succMsg}}</div>
+</div>
+<br>
+
+<div class="row show-hide-message" ng-show="main.errMsg">
+    <div class="alert alert-danger">{{main.errMsg}}</div>
+</div>

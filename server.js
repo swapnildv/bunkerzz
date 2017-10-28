@@ -11,6 +11,7 @@ var path = require('path');
 app.use(morgan('dev'));
 app.use(bodyParser.json()); // for parsing application/json
 app.use(express.static(__dirname + '/public'));
+
 app.use('/api', appRoutes); //API routes .
 
 mongoose.connect('mongodb://localhost:27017/bunkerzz', function (err) {
