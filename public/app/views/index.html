@@ -68,6 +68,9 @@
                     <li ng-show="main.isLoggedIn">
                         <a href="/cafe">Cafe</a>
                     </li>
+                    <li ng-show="main.isLoggedIn && main.authorised">
+                        <a href="/management">Management</a>
+                    </li>
                     <li ng-show="main.isLoggedIn">
                         <a href="#" ng-click="main.logout();">Logout</a>
                     </li>

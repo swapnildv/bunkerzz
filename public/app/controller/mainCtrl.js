@@ -1,5 +1,5 @@
 angular.module('mainController', ['authService'])
-    .controller("mainCtrl", function (Auth, $timeout, $location, $rootScope) {
+    .controller("mainCtrl", function (Auth, $timeout, $location, $rootScope,User) {
         var app = this;
 
         $rootScope.$on('$routeChangeStart', function () {
@@ -9,6 +9,14 @@ angular.module('mainController', ['authService'])
                 Auth.getUser().then(function (data) {
                     console.log(data.data.username);
                     app.username = data.data.username;
+                    User.getPermission().then(function(data){
+                        if(data.data.permission === 'admin' ||  data.data.permission ==='moderator'){
+                            app.authorised = true;
+                        }
+                        else{
+                            app.authorised = false;
+                        }
+                    })
                 })
             }
             else {

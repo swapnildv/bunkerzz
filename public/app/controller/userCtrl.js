@@ -9,7 +9,7 @@ angular.module('userController', ['userServices'])
             app.succMsg = false;
 
             if (valid) {
-
+                
                 User.create(app.regData)
                     .then(function (data) {
                         app.loading = false;

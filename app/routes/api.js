@@ -80,7 +80,7 @@ module.exports = function (router) {
                     res.send({ success: false, message: 'Could not authenticate password' });
                 }
                 else {
-                    var _token = jwt.sign({ username: user.username }, secret, { expiresIn: '5s' });
+                    var _token = jwt.sign({ username: user.username }, secret, { expiresIn: '24h' });
                     res.send({ success: true, message: 'User authenticated!', token: _token });
                 }
             }
@@ -137,12 +137,12 @@ module.exports = function (router) {
     router.put('/resetpassword', function (req, res) {
 
         User.findOne({ email: req.body.email }).select('email name username resettoken').exec(function (err, user) {
-            
+
 
             if (err) {
                 res.send({ success: false, message: err });
             } else {
-               
+
                 if (!req.body.email) {
                     res.send({ success: false, message: 'No e-mail was provided.' });
                 }
@@ -150,11 +150,11 @@ module.exports = function (router) {
                 if (!user) {
                     res.send({ success: false, message: 'E-mail was not found!' });
                 } else {
-                    
+
                     user.resettoken = jwt.sign({ username: user.username }, secret, { expiresIn: '24h' });
                     user.save(function (err) {
                         if (err) {
-                            
+
                             res.send({ success: false, message: err });
                         } else {
                             const mailOptions = {
@@ -281,7 +281,39 @@ module.exports = function (router) {
         res.send(req.decoded);
     });
 
+    router.get('/permission', function (req, res) {
+        User.findOne({ username: req.decoded.username }).select('permission').exec(function (err, user) {
+            if (err) throw err;
+            if (!user) {
+                res.send({ success: false, message: 'No user was found!' });
+            } else {
+                res.send({ success: true, permission: user.permission });
+            }
+        });
+    });
 
+    router.get('/management', function (req, res) {
+        console.log('route');
+        User.find({}, function (err, users) {
+            if (err) throw err;
+            User.findOne({ username: req.decoded.username }).select('permission').exec(function (err, mainUser) {
+                if (err) throw err;
+                if (!mainUser) {
+                    res.send({ success: false, message: 'No user found!' });
+                } else {
+                    if (mainUser.permission === 'admin' || mainUser.permission === 'moderator') {
+                        if (!users) {
+                            res.send({ success: false, message: 'Users not found!' });
+                        } else {
+                            res.send({ success: true, users: users, permission: mainUser.permission });
+                        }
+                    } else {
+                        res.send({ success: false, message: 'Insifficient permissions.' });
+                    }
+                }
+            });
+        });
+    });
 
 
     return router;
