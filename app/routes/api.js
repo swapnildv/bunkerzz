@@ -293,7 +293,6 @@ module.exports = function (router) {
     });
 
     router.get('/management', function (req, res) {
-        console.log('route');
         User.find({}, function (err, users) {
             if (err) throw err;
             User.findOne({ username: req.decoded.username }).select('permission').exec(function (err, mainUser) {

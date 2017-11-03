@@ -36,13 +36,11 @@ angular.module('mainController', ['authService'])
                 .then(function (data) {
                     app.loading = false;
                     if (data.data.success) {
-                        //create success mesage
-                        //Redirect to home page.
                         app.succMsg = data.data.message + "...Redirecting";
 
                         $timeout(function () {
 
-                            $location.path('/');
+                            $location.path('/home');
                             app.loginData = {};
                             app.succMsg = '';
                         }, 2000);

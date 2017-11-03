@@ -1,8 +1,13 @@
 var app = angular.module('appRoutes', ['ngRoute']).
     config(function ($routeProvider, $locationProvider) {
         $routeProvider.when('/', {
-            templateUrl: 'app/views/pages/home.html'
-        })
+                templateUrl: 'app/views/pages/users/login.html',
+                authenticated: false
+            })
+            .when('/home', {
+                templateUrl: 'app/views/pages/home.html',
+                authenticated: true
+            })
             .when('/about', {
                 templateUrl: 'app/views/pages/about.html'
             })
@@ -60,7 +65,6 @@ app.run(['$rootScope', 'Auth', '$location', 'User', function ($rootScope, Auth, 
                 $location.path('/');
             } else if (next.$$route.permission) {
                 User.getPermission().then(function (data) {
-
                     //check for valid permissions.  
                     if (next.$$route.permission[0] != data.data.permission) {
                         if (next.$$route.permission[1] != data.data.permission) {
