@@ -14,7 +14,10 @@ app.use(express.static(__dirname + '/public'));
 
 app.use('/api', appRoutes); //API routes .
 
-mongoose.connect('mongodb://localhost:27017/bunkerzz', function (err) {
+
+//mlab
+
+mongoose.connect('mongodb://swapnil:swapnil@ds243325.mlab.com:43325/bunkerzz', function (err) {
     if (err) {
         console.log('not connected to DB:' + err);
     }
@@ -23,11 +26,20 @@ mongoose.connect('mongodb://localhost:27017/bunkerzz', function (err) {
     }
 });
 
+// mongoose.connect('mongodb://localhost:27017/bunkerzz', function (err) {
+//     if (err) {
+//         console.log('not connected to DB:' + err);
+//     }
+//     else {
+//         console.log('connected to DB successfully.');
+//     }
+// });
+
 app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname + '/public/app/views/index.html'));
 })
 
-app.listen(port, function () {
+app.listen(process.env.PORT || port, function () {
     console.log('listening');
 });
 
