@@ -1,4 +1,5 @@
 angular.module('cafeController', ['cafeServices'])
+<<<<<<< HEAD
     .controller("cafeCtrl", function (Cafe, $scope) {
 
         var app = this;
@@ -40,6 +41,14 @@ angular.module('cafeController', ['cafeServices'])
 
 
         this.addCafe = function (cafeData, valid) {
+=======
+    .controller("cafeCtrl", function (Cafe,$scope) {
+        var app = this;
+        this.addCafe = function (cafeData, valid) {
+            app.loading = true;
+            app.errMsg = false;
+            app.succMsg = false;
+>>>>>>> 7c9d157db847ed2035e6e0f3897347fff2188529
 
             if (valid) {
                 Cafe.create(app.cafeData)
@@ -47,8 +56,11 @@ angular.module('cafeController', ['cafeServices'])
                         app.loading = false;
                         if (data.data.success) {
                             app.succMsg = data.data.message;
+<<<<<<< HEAD
                             app.getCafes();
                             app.showCreateForm = false;
+=======
+>>>>>>> 7c9d157db847ed2035e6e0f3897347fff2188529
                             app.cafeData = {};
                             $scope.cafeForm.$setPristine();
                         }

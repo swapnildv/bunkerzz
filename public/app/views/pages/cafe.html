@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div class="panel panel-primary">
     <div class="panel-heading">
         <strong>Cafe Management</strong>
@@ -58,6 +59,38 @@
         <button class="btn btn-primary" type="submit">Submit</button>
     </form>
 </div>
+=======
+<div class="page-header">
+    <h1>Create Cafe</h1>
+</div>
+
+<form name="cafeForm" ng-submit="cafe.addCafe(cafeData,cafeForm.$valid);" novalidate>
+    <div ng-class="{'has-success':(cafeForm.name.$valid && !cafeForm.name.$pristine),'has-error':(!cafeForm.name.$valid && !cafeForm.name.$pristine) || (!cafeForm.name.$valid && cafeForm.$submitted)}">
+        <label>Name :</label>
+        <input class="form-control" type="text" name="name" placeholder="Please enter name" ng-model="cafe.cafeData.name" ng-pattern="/^[a-zA-Z\ ]+$/i"
+            ng-minlength="3" ng-maxlength="20" required>
+        <p class="help-block" ng-show="(!cafeForm.name.$pristine && cafeForm.name.$error.required) || (cafeForm.$submitted && cafeForm.name.$error.required)">This field is required</p>
+        <ul class="help-block" ng-show="(!cafeForm.name.$pristine && cafeForm.name.$error.pattern) || (!cafeForm.name.$pristine &&  cafeForm.name.$error.minlength) || (!cafeForm.name.$pristine &&  cafeForm.name.$error.maxlength)">
+            <li>No special characters are allowed in Name field.</li>
+            <li>Must not contain any numbers.</li>
+            <li>Must be atleast 3 chracters but no more than 20.</li>
+        </ul>
+    </div>
+    <br>
+    <div ng-class="{'has-success':(cafeForm.address.$valid && !cafeForm.address.$pristine),'has-error':(!cafeForm.address.$valid && !cafeForm.address.$pristine) || (!cafeForm.address.$valid && cafeForm.$submitted)}">
+        <label>Address :</label>
+        <input class="form-control" type="text" name="address" placeholder="Please enter address" ng-model="cafe.cafeData.address"
+            required>
+        <p class="help-block" ng-show="(!cafeForm.address.$pristine && cafeForm.address.$error.required) || (cafeForm.$submitted && cafeForm.address.$error.required)">This field is required</p>
+        <!-- <ul class="help-block" ng-show="(!cafeForm.address.$pristine && cafeForm.address.$error.pattern)">
+            <li>Must contain @.</li>
+            <li>Must not contain any special characters.</li>
+        </ul> -->
+    </div>
+    <br>
+    <button class="btn btn-primary" type="submit">Submit</button>
+</form>
+>>>>>>> 7c9d157db847ed2035e6e0f3897347fff2188529
 
 <br>
 <div class="jumbotron text-center" ng-show="cafe.loading">

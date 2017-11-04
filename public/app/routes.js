@@ -1,9 +1,15 @@
 var app = angular.module('appRoutes', ['ngRoute']).
     config(function ($routeProvider, $locationProvider) {
         $routeProvider.when('/', {
+<<<<<<< HEAD
             templateUrl: 'app/views/pages/users/login.html',
             authenticated: false
         })
+=======
+                templateUrl: 'app/views/pages/users/login.html',
+                authenticated: false
+            })
+>>>>>>> 7c9d157db847ed2035e6e0f3897347fff2188529
             .when('/home', {
                 templateUrl: 'app/views/pages/home.html',
                 authenticated: true
@@ -21,7 +27,16 @@ var app = angular.module('appRoutes', ['ngRoute']).
                 templateUrl: 'app/views/pages/users/login.html',
                 authenticated: false
             })
+<<<<<<< HEAD
 
+=======
+            .when('/cafe', {
+                templateUrl: 'app/views/pages/cafe.html',
+                controller: 'cafeCtrl',
+                controllerAs: 'cafe',
+                authenticated: true
+            })
+>>>>>>> 7c9d157db847ed2035e6e0f3897347fff2188529
             .when('/resetpassword', {
                 templateUrl: 'app/views/pages/reset/password.html',
                 controller: 'forgotpwdCtrl',
@@ -41,6 +56,7 @@ var app = angular.module('appRoutes', ['ngRoute']).
                 authenticated: true,
                 permission: ['admin', 'moderator']
             })
+<<<<<<< HEAD
             .when('/cafe', {
                 templateUrl: 'app/views/pages/cafe.html',
                 controller: 'cafeCtrl',
@@ -48,6 +64,8 @@ var app = angular.module('appRoutes', ['ngRoute']).
                 authenticated: true,
                 permission: ['admin']
             })
+=======
+>>>>>>> 7c9d157db847ed2035e6e0f3897347fff2188529
             .when('/logout', {
                 templateUrl: 'app/views/pages/users/logout.html',
                 authenticated: true

@@ -348,6 +348,7 @@ module.exports = function (router) {
         }
     });
 
+<<<<<<< HEAD
     //get list of cafe.
     router.get('/cafe', function (req, res) {
         Cafe.find({}, function (err, cafes) {
@@ -371,6 +372,8 @@ module.exports = function (router) {
         });
     });
 
+=======
+>>>>>>> 7c9d157db847ed2035e6e0f3897347fff2188529
 
     return router;
 }
