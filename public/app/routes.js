@@ -23,6 +23,8 @@ var app = angular.module('appRoutes', ['ngRoute']).
             })
             .when('/cafe', {
                 templateUrl: 'app/views/pages/cafe.html',
+                controller: 'cafeCtrl',
+                controllerAs: 'cafe',
                 authenticated: true
             })
             .when('/resetpassword', {

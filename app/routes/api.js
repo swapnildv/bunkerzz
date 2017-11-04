@@ -1,5 +1,6 @@
 
 var User = require('../models/user');
+var Cafe = require('../models/cafe');
 var nodemailer = require('nodemailer');
 var jwt = require('jsonwebtoken');
 var secret = 'bunkerzz';
@@ -312,6 +313,39 @@ module.exports = function (router) {
                 }
             });
         });
+    });
+
+
+    //create new cafe.
+    router.post('/cafe', function (req, res) {
+        var cafe = new Cafe();
+        cafe.name = req.body.name;
+        cafe.address = req.body.address;
+        if (req.body.name == null || req.body.name == "" || req.body.address == null || req.body.address == "") {
+            res.json({ success: false, message: 'Ensure cafe name and address were provided' })
+        }
+        else {
+            cafe.save(function (err) {
+                if (err) {
+                    if (err.errors != null) {
+                        if (err.errors.name) {
+                            res.json({ success: false, message: err.errors.name.message })
+                        }
+                        else if (err.errors.address) {
+                            res.json({ success: false, message: err.errors.address.message })
+                        }
+                        else {
+                            res.json({ success: false, message: err })
+                        }
+                    }
+                    else if (err) {
+                        res.json({ success: false, message: err });
+                    }
+                } else {
+                    res.json({ success: true, message: 'Cafe succesfully created', cafe: cafe });
+                }
+            });
+        }
     });
 
 

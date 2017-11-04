@@ -3,13 +3,10 @@ angular.module('userController', ['userServices'])
 
         var app = this;
         this.regUser = function (regData, valid) {
-
             app.loading = true;
             app.errMsg = false;
             app.succMsg = false;
-
             if (valid) {
-                
                 User.create(app.regData)
                     .then(function (data) {
                         app.loading = false;
