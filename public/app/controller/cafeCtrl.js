@@ -1,5 +1,4 @@
 angular.module('cafeController', ['cafeServices'])
-<<<<<<< HEAD
     .controller("cafeCtrl", function (Cafe, $scope) {
 
         var app = this;
@@ -8,7 +7,7 @@ angular.module('cafeController', ['cafeServices'])
         app.succMsg = false;
 
         this.showCreateForm = false;
-        
+
 
         app.getCafes = function () {
 
@@ -41,38 +40,36 @@ angular.module('cafeController', ['cafeServices'])
 
 
         this.addCafe = function (cafeData, valid) {
-=======
-    .controller("cafeCtrl", function (Cafe,$scope) {
-        var app = this;
-        this.addCafe = function (cafeData, valid) {
-            app.loading = true;
-            app.errMsg = false;
-            app.succMsg = false;
->>>>>>> 7c9d157db847ed2035e6e0f3897347fff2188529
 
-            if (valid) {
-                Cafe.create(app.cafeData)
-                    .then(function (data) {
-                        app.loading = false;
-                        if (data.data.success) {
-                            app.succMsg = data.data.message;
-<<<<<<< HEAD
-                            app.getCafes();
-                            app.showCreateForm = false;
-=======
->>>>>>> 7c9d157db847ed2035e6e0f3897347fff2188529
-                            app.cafeData = {};
-                            $scope.cafeForm.$setPristine();
-                        }
-                        else {
-                            //Create error message
-                            app.errMsg = data.data.message;
+            var app = this;
+            this.addCafe = function (cafeData, valid) {
+                app.loading = true;
+                app.errMsg = false;
+                app.succMsg = false;
 
-                        }
-                    });
-            } else {
-                app.loading = false;
-                app.errMsg = "Please ensure form is filled properly";
+                if (valid) {
+                    Cafe.create(app.cafeData)
+                        .then(function (data) {
+                            app.loading = false;
+                            if (data.data.success) {
+                                app.succMsg = data.data.message;
+                                app.getCafes();
+                                app.showCreateForm = false;
+                                app.cafeData = {};
+                                $scope.cafeForm.$setPristine();
+                            }
+                            else {
+                                //Create error message
+                                app.errMsg = data.data.message;
+
+                            }
+                        });
+                } else {
+                    app.loading = false;
+                    app.errMsg = "Please ensure form is filled properly";
+                }
             }
         }
+
     });
+

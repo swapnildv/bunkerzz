@@ -39,10 +39,6 @@ angular.module('userServices', [])
 
         //User.getUsers()
         userFactory.getUsers = function () {
-<<<<<<< HEAD
-=======
-            console.log('call');
->>>>>>> 7c9d157db847ed2035e6e0f3897347fff2188529
             return $http.get('/api/management/');
         }
 
