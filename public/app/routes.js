@@ -41,11 +41,18 @@ var app = angular.module('appRoutes', ['ngRoute']).
                 permission: ['admin', 'moderator']
             })
             .when('/cafe', {
-                templateUrl: 'app/views/pages/cafe.html',
+                templateUrl: 'app/views/pages/management/cafe.html',
                 controller: 'cafeCtrl',
                 controllerAs: 'cafe',
                 authenticated: true,
                 permission: ['admin']
+            })
+            .when('/menu/:cafeid', {
+                templateUrl: 'app/views/pages/management/menu.html',
+                controller: 'menuCtrl',
+                controllerAs: 'menu',
+                authenticated: true,
+                permission: ['admin','moderator']
             })
             .when('/logout', {
                 templateUrl: 'app/views/pages/users/logout.html',
@@ -61,7 +68,6 @@ var app = angular.module('appRoutes', ['ngRoute']).
 
 app.run(['$rootScope', 'Auth', '$location', 'User', function ($rootScope, Auth, $location, User) {
     $rootScope.$on('$routeChangeStart', function (event, next, current) {
-
         if (next.$$route.authenticated == true) {
             if (!Auth.isLoggedIn()) {
                 event.preventDefault();

@@ -1,0 +1,64 @@
+<div ng-show="!menu.showCreateForm" class="panel panel-primary">
+    <div class="panel-heading">
+        <strong>Menu</strong>
+    </div>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>IsActive</th>
+        </tr>
+        <tr ng-repeat="menu in menu.menus">
+            <td>{{menu.name}}</td>
+            <td>{{menu.isActive}}</td>
+            <td>
+                <a href="#">
+                    <button type="button" class="btn btn-primary">Edit</button>
+                </a>
+                <!-- <a href="#">
+                    <button type="button" class="btn btn-danger">Delete</button>
+                </a> -->
+            </td>
+        </tr>
+    </table>
+</div>
+
+<button ng-show="!menu.showCreateForm" class="btn btn-primary" type="button" ng-click="menu.showCreateForm = true">Create New</button>
+
+<div ng-show="menu.showCreateForm">
+    <div class="page-header">
+        <h1>Create menu</h1>
+    </div>
+    <form name="menuForm" ng-submit="menu.addmenu(menuData,menuForm.$valid);" novalidate>
+        <div ng-class="{'has-success':(menuForm.name.$valid && !menuForm.name.$pristine),'has-error':(!menuForm.name.$valid && !menuForm.name.$pristine) || (!menuForm.name.$valid && menuForm.$submitted)}">
+            <label>Name :</label>
+            <input class="form-control" type="text" name="name" placeholder="Please enter name" ng-model="menu.menuData.name" ng-minlength="3"
+                ng-maxlength="20" required>
+            <p class="help-block" ng-show="(!menuForm.name.$pristine && menuForm.name.$error.required) || (menuForm.$submitted && menuForm.name.$error.required)">This field is required</p>
+            <!-- <ul class="help-block" ng-show="(!menuForm.name.$pristine && menuForm.name.$error.pattern) || (!menuForm.name.$pristine &&  menuForm.name.$error.minlength) || (!menuForm.name.$pristine &&  menuForm.name.$error.maxlength)">
+                <li>No special characters are allowed in Name field.</li>
+                <li>Must not contain any numbers.</li>
+                <li>Must be atleast 3 chracters but no more than 20.</li>
+            </ul> -->
+        </div>
+        <br>
+        <button class="btn btn-primary" type="submit">Submit</button>
+        <button class="btn btn-primary" type="button" ng-click="menu.showCreateForm = false">Cancel</button>
+    </form>
+</div>
+<br>
+<div class="jumbotron text-center" ng-show="menu.loading">
+    <h4>
+        <span class="glyphicon glyphicon-repeat spinner">
+            Loading....
+        </span>
+    </h4>
+</div>
+<br>
+<div class="row show-hide-message" ng-show="menu.succMsg">
+    <div class="alert alert-success">{{menu.succMsg}}</div>
+</div>
+<br>
+
+<div class="row show-hide-message" ng-show="menu.errMsg">
+    <div class="alert alert-danger">{{menu.errMsg}}</div>
+</div>

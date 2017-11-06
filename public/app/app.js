@@ -6,8 +6,7 @@ angular.module('bunkerzz',
         'mainController',
         'authService',
         'managementController',
-        'cafeServices',
-        'cafeController'
+        'managementServices'
     ])
     .config(function ($httpProvider) {
         $httpProvider.interceptors.push('AuthInterceptors');
