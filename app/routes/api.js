@@ -378,9 +378,10 @@ module.exports = function (router) {
         var menu = new Menu();
         menu.name = req.body.name;
         menu.cafeid = req.body.cafeid;
-        
+
         //create submenu 
-        //menu.submenus.push({ name: 'Cheese Piza', craetedDate: new Date() });
+        menu.submenus.push({ name: 'Cheese', craetedDate: new Date(), price: 10 });
+        menu.submenus.push({ name: 'Mayo', craetedDate: new Date(), price: 10 });
         if (req.body.name == null || req.body.name == "") {
             res.json({ success: false, message: 'Ensure menu name is provided!' })
         }

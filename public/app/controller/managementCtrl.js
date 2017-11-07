@@ -94,7 +94,7 @@ angular.module('managementController', ['userServices', 'managementServices'])
         app.loading = true;
         app.errMsg = false;
         app.succMsg = false;
-
+        app.submenus = [];
         app.showCreateForm = false;
 
         app.getMenus = function () {
@@ -131,5 +131,10 @@ angular.module('managementController', ['userServices', 'managementServices'])
                 app.loading = false;
                 app.errMsg = "Please ensure form is filled properly";
             }
+        }
+
+        app.addSubmenu = function(){
+            app.submenus.push(app.submenu);
+            app.submenu = {};
         }
     });

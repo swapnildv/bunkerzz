@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 var Submenu = new Schema({
     name: { type: String, required: true },
     isActive: { type: Boolean, required: true, default: true },
+    price: { type: Number, required: true, default: 0 },
     craetedDate: { type: Date }
 });
 

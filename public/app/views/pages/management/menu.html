@@ -2,23 +2,67 @@
     <div class="panel-heading">
         <strong>Menu</strong>
     </div>
-    <table class="table">
+
+    <table class="table table-condensed table-bordered">
         <tr>
-            <th>Name</th>
-            <th>IsActive</th>
+            <th class="col-md-1">#</th>
+            <th class="col-md-8">Name</th>
+            <th class="col-md-2">IsActive</th>
         </tr>
-        <tr ng-repeat="menu in menu.menus">
-            <td>{{menu.name}}</td>
-            <td>{{menu.isActive}}</td>
-            <td>
-                <a href="#">
+        <tbody ng-repeat-start="menu in menu.menus">
+            <tr>
+                <td class="col-md-1">
+                    <button ng-click="menu.isCollapsed=!menu.isCollapsed" expand>
+                        <span ng-bind="menu.isCollapsed ? '-' : '+'"></span>
+                    </button>
+                    <!-- <a ng-click="menu.isCollapsed=!menu.isCollapsed">collapse</a> -->
+                </td>
+                <td class="col-md-8"> {{menu.name}}</td>
+                <td class="col-md-2">{{menu.isActive}}</td>
+                <td>
                     <button type="button" class="btn btn-primary">Edit</button>
-                </a>
-                <!-- <a href="#">
-                    <button type="button" class="btn btn-danger">Delete</button>
-                </a> -->
-            </td>
-        </tr>
+                </td>
+            </tr>
+        </tbody>
+        <tbody ng-repeat-end ng-show="menu.isCollapsed">
+            <tr>
+                <th>#</th>
+                <th colspan="3">Submenu</th>
+
+            </tr>
+            <tr>
+                <td></td>
+                <td colspan="3">
+                    <table class="table table-condensed table-bordered">
+                        <tr>
+                            <th class="col-md-6">Name</th>
+                            <th class="col-md-3">Price</th>
+                            <th class="col-md-3">IsActive</th>
+                        </tr>
+                        <tbody ng-repeat="submenu in menu.submenus">
+                            <tr>
+                                <td class="col-md-6">
+                                    {{submenu.name}}
+                                </td>
+                                <td class="col-md-3"> {{submenu.price}}</td>
+                                <td class="col-md-3">{{submenu.isActive}}</td>
+                                <!-- <td>
+                                    <button type="button" class="btn btn-primary">Edit</button>
+                                </td> -->
+                            </tr>
+                        </tbody>
+
+                        <!-- <ul>
+                            <li ng-repeat="submenu in menu.submenus">
+                                {{submenu.name}}
+                            </li>
+                        </ul> -->
+                    </table>
+
+                </td>
+            </tr>
+        </tbody>
+
     </table>
 </div>
 
@@ -40,7 +84,37 @@
                 <li>Must be atleast 3 chracters but no more than 20.</li>
             </ul> -->
         </div>
+
+        <div>
+            <label>Submenu :</label>
+            <input class="form-control" type="text" name="name" placeholder="Menu name" ng-model="menu.submenu.name" required>
+
+            <input class="form-control" type="text" name="name" placeholder="Price" ng-model="menu.submenu.price" required>
+
+            <button class="btn btn-primary" type="button" ng-click="menu.addSubmenu()">Add to list</button>
+            <!-- <p class="help-block" ng-show="(!menuForm.name.$pristine && menuForm.name.$error.required) || (menuForm.$submitted && menuForm.name.$error.required)">This field is required</p> -->
+            <!-- <ul class="help-block" ng-show="(!menuForm.name.$pristine && menuForm.name.$error.pattern) || (!menuForm.name.$pristine &&  menuForm.name.$error.minlength) || (!menuForm.name.$pristine &&  menuForm.name.$error.maxlength)">
+                    <li>No special characters are allowed in Name field.</li>
+                    <li>Must not contain any numbers.</li>
+                    <li>Must be atleast 3 chracters but no more than 20.</li>
+                </ul> -->
+
+            <table ng-show="menu.submenus.length > 0">
+                <tbody  ng-repeat-start="sm in menu.submenus">
+                    <tr>
+                        <td class="col-md-8"> {{sm.name}}</td>
+                        <td class="col-md-2">{{sm.price}}</td>
+                        <td>
+                            <button type="button" class="btn btn-primary">Edit</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
         <br>
+
+
         <button class="btn btn-primary" type="submit">Submit</button>
         <button class="btn btn-primary" type="button" ng-click="menu.showCreateForm = false">Cancel</button>
     </form>
