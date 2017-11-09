@@ -421,7 +421,7 @@ module.exports = function (router) {
 
     //Update menu item
     router.put('/menu', function (req, res) {
-        
+
 
         if (req.body.name == null || req.body.name == "") {
             res.json({ success: false, message: 'Ensure menu name is provided!' })
@@ -439,6 +439,13 @@ module.exports = function (router) {
                                 res.send({ success: false, message: 'Something went wrong!' });
                             } else {
                                 menu.name = req.body.name;
+                                if (req.body.submenus != null) {
+                                    if (req.body.submenus.length > 0) {
+                                        req.body.submenus.forEach(function (element) {
+                                            menu.submenus.push(element);
+                                        }, this);
+                                    }
+                                }
                                 menu.save(function (err) {
                                     if (err) {
                                         res.send({ success: false, message: err });

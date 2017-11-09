@@ -97,6 +97,7 @@ angular.module('managementController', ['userServices', 'managementServices'])
         app.submenus = [];
         app.showCreateForm = false;
         app.menuEditMode = false;
+        app.editing = false;
 
         app.getMenus = function () {
             Management.menuByCafe($routeParams.cafeid).then(function (data) {
@@ -109,6 +110,9 @@ angular.module('managementController', ['userServices', 'managementServices'])
         app.getMenus();
 
         app.addmenu = function (menuData, isValid) {
+            app.loading = true;
+            app.errMsg = false;
+            app.succMsg = false;
             if (isValid) {
                 app.menuData.cafeid = $routeParams.cafeid;
                 Management.createMenu(app.menuData)
@@ -117,6 +121,8 @@ angular.module('managementController', ['userServices', 'managementServices'])
                         if (data.data.success) {
                             app.succMsg = data.data.message;
                             app.getMenus();
+                            app.loading = false;
+                            app.errMsg = false;
                             app.showCreateForm = false;
                             app.menuData = {};
                             $scope.menuForm.$setPristine();
@@ -133,10 +139,7 @@ angular.module('managementController', ['userServices', 'managementServices'])
             }
         }
 
-        app.addSubmenu = function () {
-            app.submenus.push(app.submenu);
-            app.submenu = {};
-        }
+
 
         app.menuEdit = function (menu) {
             app.cancelUpdate();
@@ -144,9 +147,12 @@ angular.module('managementController', ['userServices', 'managementServices'])
             app.editing = app.menus.indexOf(menu);
             app.newField = angular.copy(menu);
         }
-        app.editing = false;
+
+
         app.menuUpdate = function (menu) {
             app.loading = true;
+            app.errMsg = false;
+            app.succMsg = false;
             Management.updateMenuById(menu)
                 .then(function (data) {
                     app.loading = false;
@@ -164,11 +170,6 @@ angular.module('managementController', ['userServices', 'managementServices'])
 
                     }
                 });
-            // } else {
-            //     app.loading = false;
-            //     app.errMsg = "Please ensure form is filled properly";
-            // }
-            // menu.menuEditMode = !menu.menuEditMode;
         }
 
         app.cancelUpdate = function () {
@@ -176,14 +177,22 @@ angular.module('managementController', ['userServices', 'managementServices'])
                 app.newField.menuEditMode = !app.newField.menuEditMode;
                 app.menus[app.editing] = app.newField;
                 app.editing = false;
-            }  
+            }
 
-            // menuItem = angular.copy(app.bufferMenu);
-            // menuItem.menuEditMode = !menuItem.menuEditMode;
-            // console.log(menuItem);
-            // menuItem = angular.copy(app.bufferMenu);
-            // console.log(app.bufferMenu);
-            // menuItem.menuEditMode = true;
+        }
+
+        app.addSubmenu = function (menu, submenu, isValid) {
+            menu.submenus = [];
+            menu.submenus.push(app.submenu);
+            if (isValid) {
+                app.menuUpdate(menu);
+                app.submenu = {};
+            } else {
+                app.loading = false;
+                app.errMsg = "Please ensure form is filled properly";
+            }
+            // app.submenus.push(app.submenu);
+            // app.submenu = {};
         }
 
     });
