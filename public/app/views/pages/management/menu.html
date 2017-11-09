@@ -6,25 +6,31 @@
     <table class="table table-condensed table-bordered">
         <tr>
             <th class="col-md-1">#</th>
-            <th class="col-md-8">Name</th>
+            <th class="col-md-5">Name</th>
             <th class="col-md-2">IsActive</th>
+            <th class="col-md-3"></th>
         </tr>
-        <tbody ng-repeat-start="menu in menu.menus">
+        <tbody ng-repeat-start="menuItem in menu.menus">
             <tr>
                 <td class="col-md-1">
-                    <button ng-click="menu.isCollapsed=!menu.isCollapsed" expand>
-                        <span ng-bind="menu.isCollapsed ? '-' : '+'"></span>
+                    <button ng-click="menuItem.isCollapsed=!menuItem.isCollapsed" expand>
+                        <span ng-bind="menuItem.isCollapsed ? '-' : '+'"></span>
                     </button>
                     <!-- <a ng-click="menu.isCollapsed=!menu.isCollapsed">collapse</a> -->
                 </td>
-                <td class="col-md-8"> {{menu.name}}</td>
-                <td class="col-md-2">{{menu.isActive}}</td>
-                <td>
-                    <button type="button" class="btn btn-primary">Edit</button>
+                <td class="col-md-5">
+                    <input ng-if="menuItem.menuEditMode" class="form-control" type="text" name="name" placeholder="Menu name" ng-model="menuItem.name">
+                    <span ng-if="!menuItem.menuEditMode"> {{menuItem.name}}</span>
+                </td>
+                <td class="col-md-2">{{menuItem.isActive}}</td>
+                <td class="col-md-3">
+                    <button type="button" ng-show="!menuItem.menuEditMode" ng-click="menu.menuEdit(menuItem)" class="btn">Edit</button>
+                    <button type="button" ng-show="menuItem.menuEditMode" ng-click="menu.menuUpdate(menuItem)" class="btn btn-success">Update</button>
+                    <button type="button" ng-show="menuItem.menuEditMode" class="btn" ng-click="menu.cancelUpdate(menuItem)">Cancel</button>
                 </td>
             </tr>
         </tbody>
-        <tbody ng-repeat-end ng-show="menu.isCollapsed">
+        <tbody ng-repeat-end ng-show="menuItem.isCollapsed">
             <tr>
                 <th>#</th>
                 <th colspan="3">Submenu</th>
@@ -39,7 +45,7 @@
                             <th class="col-md-3">Price</th>
                             <th class="col-md-3">IsActive</th>
                         </tr>
-                        <tbody ng-repeat="submenu in menu.submenus">
+                        <tbody ng-repeat="submenu in menuItem.submenus">
                             <tr>
                                 <td class="col-md-6">
                                     {{submenu.name}}
@@ -87,9 +93,9 @@
 
         <div>
             <label>Submenu :</label>
-            <input class="form-control" type="text" name="name" placeholder="Menu name" ng-model="menu.submenu.name" required>
+            <input class="form-control" type="text" name="name" placeholder="Menu name" ng-model="menu.submenu.name">
 
-            <input class="form-control" type="text" name="name" placeholder="Price" ng-model="menu.submenu.price" required>
+            <input class="form-control" type="text" name="name" placeholder="Price" ng-model="menu.submenu.price">
 
             <button class="btn btn-primary" type="button" ng-click="menu.addSubmenu()">Add to list</button>
             <!-- <p class="help-block" ng-show="(!menuForm.name.$pristine && menuForm.name.$error.required) || (menuForm.$submitted && menuForm.name.$error.required)">This field is required</p> -->
@@ -100,7 +106,7 @@
                 </ul> -->
 
             <table ng-show="menu.submenus.length > 0">
-                <tbody  ng-repeat-start="sm in menu.submenus">
+                <tbody ng-repeat="sm in menu.submenus">
                     <tr>
                         <td class="col-md-8"> {{sm.name}}</td>
                         <td class="col-md-2">{{sm.price}}</td>

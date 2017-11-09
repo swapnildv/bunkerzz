@@ -380,8 +380,8 @@ module.exports = function (router) {
         menu.cafeid = req.body.cafeid;
 
         //create submenu 
-        menu.submenus.push({ name: 'Cheese', craetedDate: new Date(), price: 10 });
-        menu.submenus.push({ name: 'Mayo', craetedDate: new Date(), price: 10 });
+        // menu.submenus.push({ name: 'Cheese', craetedDate: new Date(), price: 10 });
+        // menu.submenus.push({ name: 'Mayo', craetedDate: new Date(), price: 10 });
         if (req.body.name == null || req.body.name == "") {
             res.json({ success: false, message: 'Ensure menu name is provided!' })
         }
@@ -418,6 +418,48 @@ module.exports = function (router) {
             });
         }
     });
+
+    //Update menu item
+    router.put('/menu', function (req, res) {
+        
+
+        if (req.body.name == null || req.body.name == "") {
+            res.json({ success: false, message: 'Ensure menu name is provided!' })
+        } else {
+            User.findOne({ username: req.decoded.username }).select('permission').exec(function (err, mainUser) {
+                if (err) throw err;
+                if (!mainUser) {
+                    res.send({ success: false, message: 'No user found!' });
+                } else {
+                    if (mainUser.permission === 'admin') {
+                        //update menu.
+                        Menu.findOne({ _id: req.body._id }).select().exec(function (err, menu) {
+                            if (err) throw err;
+                            if (!menu) {
+                                res.send({ success: false, message: 'Something went wrong!' });
+                            } else {
+                                menu.name = req.body.name;
+                                menu.save(function (err) {
+                                    if (err) {
+                                        res.send({ success: false, message: err });
+                                    }
+                                    else {
+                                        res.send({ success: true, message: 'Menu has succefully updated' });
+                                    }
+                                });
+
+                            }
+                        });
+                    } else {
+                        res.send({ success: false, message: 'Insifficient permissions.' });
+                    }
+
+                }
+            });
+        }
+
+    });
+
 
     router.get('/menu/:cafeid', function (req, res) {
         Menu.find({ cafeid: req.params.cafeid }).select('').exec(function (err, menus) {

@@ -20,5 +20,11 @@ angular.module('managementServices', [])
         mgmtFactory.menuByCafe = function (cafeid) {
             return $http.get('/api/menu/' + cafeid);
         }
+
+        //Management.updateMenuById();
+        mgmtFactory.updateMenuById = function (menuData) {
+            return $http.put('/api/menu/', menuData);
+        }
+
         return mgmtFactory;
     });
