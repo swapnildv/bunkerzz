@@ -9,16 +9,9 @@
                 <p class="help-block" ng-show="(!menuForm.name.$pristine && menuForm.name.$error.required) || (menuForm.$submitted && menuForm.name.$error.required)">This field is required</p>
             </div>
         </div>
-
-        <!-- <div class="col-md-3">
-                        <div class="form-group">
-                            <input type="text" data-ng-model="company.numberOfEmployees" name="numberOfEmployees" class="form-control input-flat" placeholder="numberOfEmployees"
-                                required/>
-                        </div>
-                    </div> -->
         <div class="col-md-3">
             <div class="form-group">
-                <button type="submit" class="btn btn-full btn-login input-flat">Add</button>
+                <button type="submit" class="btn btn-info">Add</button>
             </div>
         </div>
 
@@ -43,15 +36,21 @@
                     <button ng-click="menuItem.isCollapsed=!menuItem.isCollapsed" expand>
                         <span ng-bind="menuItem.isCollapsed ? '-' : '+'"></span>
                     </button>
-                    <!-- <a ng-click="menu.isCollapsed=!menu.isCollapsed">collapse</a> -->
+                    <span ng-if="menuItem.submenus.length <= 0" class="label label-success">new</span>
                 </td>
                 <td class="col-md-5">
                     <input ng-if="menuItem.menuEditMode" class="form-control" type="text" name="name" placeholder="Menu name" ng-model="menuItem.name">
                     <span ng-if="!menuItem.menuEditMode"> {{menuItem.name}}</span>
                 </td>
-                <td class="col-md-2">{{menuItem.isActive}}</td>
+
+
+                <td class="col-md-2">
+                    <select class="form-control" ng-if="menuItem.menuEditMode" ng-options="ele for ele in menu.isActiveOptions" ng-model="menuItem.isActive">
+                    </select>
+                    <span ng-if="!menuItem.menuEditMode">{{menuItem.isActive}}</span>
+                </td>
                 <td class="col-md-3">
-                    <button type="button" ng-show="!menuItem.menuEditMode" ng-click="menu.menuEdit(menuItem)" class="btn">Edit</button>
+                    <button type="button" ng-show="!menuItem.menuEditMode" ng-click="menu.menuEdit(menuItem)" class="btn btn-warning">Edit</button>
                     <button type="button" ng-show="menuItem.menuEditMode" ng-click="menu.menuUpdate(menuItem)" class="btn btn-success">Update</button>
                     <button type="button" ng-show="menuItem.menuEditMode" class="btn" ng-click="menu.cancelUpdate(menuItem)">Cancel</button>
                 </td>
@@ -65,25 +64,32 @@
             </tr>
             <tr>
                 <td colspan="4">
-                    <form name="submenuForm" ng-submit="menu.addSubmenu(menuItem,submenuData,submenuForm.$valid);" novalidate>
+
+                    <form name="menuItem.submenuForm" ng-submit="menu.addSubmenu(menuItem,menuItem.submenuForm.$valid);" novalidate>
                         <div class="row">
-                            <div class="col-md-6" ng-class="{'has-success':(submenuForm.name.$valid && !submenuForm.name.$pristine),'has-error':(!submenuForm.name.$valid && !submenuForm.name.$pristine) || (!submenuForm.name.$valid && submenuForm.$submitted)}">
+                            <div class="col-md-6" ng-class="{'has-success':(menuItem.submenuForm.name.$valid && !menuItem.submenuForm.name.$pristine),'has-error':(!menuItem.submenuForm.name.$valid && !menuItem.submenuForm.name.$pristine) || (!menuItem.submenuForm.name.$valid && menuItem.submenuForm.$submitted)}">
                                 <div class="form-group">
-                                    <input type="text" ng-model="menu.submenu.name" name="name" class="form-control input-flat" placeholder="name" required/>
+                                    <input type="text" ng-model="menuItem.submenu.name" name="name" class="form-control input-flat" placeholder="name" required/>
 
-                                    <p class="help-block" ng-show="(!submenuForm.name.$pristine && submenuForm.name.$error.required) || (submenuForm.$submitted && submenuForm.name.$error.required)">This field is required</p>
+                                    <p class="help-block" ng-show="(!menuItem.submenuForm.name.$pristine && menuItem.submenuForm.name.$error.required) || (menuItem.submenuForm.$submitted && menuItem.submenuForm.name.$error.required)">This field is required</p>
                                 </div>
                             </div>
 
                             <div class="col-md-3">
-                                <div class="form-group">
-                                    <input type="text" data-ng-model="menu.submenu.price" name="price" class="form-control input-flat" placeholder="Price" required/>
-                                    <p class="help-block" ng-show="(!submenuForm.price.$pristine && submenuForm.price.$error.required) || (submenuForm.$submitted && submenuForm.price.$error.required)">This field is required</p>
+                                <div class="form-group" ng-class="{'has-success':(menuItem.submenuForm.price.$valid && !menuItem.submenuForm.price.$pristine),'has-error':(!menuItem.submenuForm.price.$valid && !menuItem.submenuForm.price.$pristine) || (!menuItem.submenuForm.price.$valid && menuItem.submenuForm.$submitted)}">
+                                    <input type="number" ng-model="menuItem.submenu.price" name="price" class="form-control input-flat" placeholder="Price" ng-pattern="/^\d{0,10}(\.\d{1,4})?$/"
+                                        required/>
+                                    <p class="help-block" ng-show="(!menuItem.submenuForm.price.$pristine && menuItem.submenuForm.price.$error.required) || (menuItem.submenuForm.$submitted && menuItem.submenuForm.price.$error.required)">This field is required</p>
+                                    <span class="help-block" ng-show="(!menuItem.submenuForm.price.$pristine && menuItem.submenuForm.price.$error.pattern)">
+                                        Please enter valid price!</span>
                                 </div>
                             </div>
+
+
+
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <button type="submit" class="btn btn-full btn-login input-flat">Add</button>
+                                    <button type="submit" class="btn btn-info">Add</button>
                                 </div>
                             </div>
 
@@ -108,17 +114,8 @@
                                 </td>
                                 <td class="col-md-3"> {{submenu.price}}</td>
                                 <td class="col-md-3">{{submenu.isActive}}</td>
-                                <!-- <td>
-                                    <button type="button" class="btn btn-primary">Edit</button>
-                                </td> -->
                             </tr>
                         </tbody>
-
-                        <!-- <ul>
-                            <li ng-repeat="submenu in menu.submenus">
-                                {{submenu.name}}
-                            </li>
-                        </ul> -->
                     </table>
 
                 </td>
@@ -127,18 +124,12 @@
 
     </table>
 </div>
-
-<!-- <button class="btn btn-primary" type="button" ng-click="menu.showCreateForm = true">Create New</button> -->
-
-
 <br>
-<div class="jumbotron text-center" ng-show="menu.loading">
-    <h4>
-        <span class="glyphicon glyphicon-repeat spinner">
-            Loading....
-        </span>
-    </h4>
+<div class="text-center" ng-show="menu.loading">
+    <div class="spinner">
+    </div>
 </div>
+
 <br>
 <div class="row show-hide-message" ng-show="menu.succMsg">
     <div class="alert alert-success">{{menu.succMsg}}</div>

@@ -22,13 +22,40 @@ header .navbar 		{
 
 /* ANIMATIONS
 ====================== */
+
+
 .spinner {
-	-webkit-animation:spin 1s infinite;
+	/* -webkit-animation:spin 1s infinite;
 	-moz-animation:spin 1s infinite;
-	animation:spin 1s infinite;
+	animation:spin 1s infinite; */
+
+	border: 16px solid #f3f3f3;
+	border-radius: 50%;
+	border-top: 12px solid blue;
+	border-right: 12px solid green;
+	border-left: 12px solid green;
+	border-bottom: 10px solid red;
+	width: 80px;
+	height: 80px;
+	-webkit-animation: spin 2s linear infinite;
+	animation: spin 2s linear infinite;
+	margin :0 auto;
 }
 
-@keyframes spin {
+
+@-webkit-keyframes spin {
+	0% { -webkit-transform: rotate(0deg); }
+	100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+  }
+	
+
+
+/* @keyframes spin {
 	from 	{ transform:rotate(0deg); }
 	to 	{ transform:rotate(360deg); }
 }
@@ -41,7 +68,7 @@ header .navbar 		{
 @-moz-keyframes spin {
 	from 	{ -moz-transform:rotate(0deg); }	
 	to 	{ -moz-transform:rotate(360deg); }
-}
+} */
 
 .reset{
 	float: right;

@@ -25,6 +25,12 @@ angular.module('managementServices', [])
         mgmtFactory.updateMenuById = function (menuData) {
             return $http.put('/api/menu/', menuData);
         }
+        //Management.addSubmenu();
+        mgmtFactory.addSubmenu = function (submenuData) {
+            return $http.put('/api/submenu/', submenuData);
+        }
+
+        
 
         return mgmtFactory;
     });

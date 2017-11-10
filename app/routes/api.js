@@ -439,19 +439,62 @@ module.exports = function (router) {
                                 res.send({ success: false, message: 'Something went wrong!' });
                             } else {
                                 menu.name = req.body.name;
-                                if (req.body.submenus != null) {
-                                    if (req.body.submenus.length > 0) {
-                                        req.body.submenus.forEach(function (element) {
-                                            menu.submenus.push(element);
-                                        }, this);
-                                    }
-                                }
+                                menu.isActive = req.body.isActive;
+                                // if (req.body.submenus != null) {
+                                //     if (req.body.submenus.length > 0) {
+                                //         req.body.submenus.forEach(function (element) {
+                                //             menu.submenus.push(element);
+                                //         }, this);
+                                //     }
+                                // }
                                 menu.save(function (err) {
                                     if (err) {
                                         res.send({ success: false, message: err });
                                     }
                                     else {
                                         res.send({ success: true, message: 'Menu has succefully updated' });
+                                    }
+                                });
+
+                            }
+                        });
+                    } else {
+                        res.send({ success: false, message: 'Insifficient permissions.' });
+                    }
+
+                }
+            });
+        }
+
+    });
+
+    //insert submenu item
+    router.put('/submenu', function (req, res) {
+
+
+        if (req.body.submenu == null || req.body.submenu == "" ||
+            req.body._id == null) {
+            res.json({ success: false, message: 'Ensure submenu data is provided' });
+        } else {
+            User.findOne({ username: req.decoded.username }).select('permission').exec(function (err, mainUser) {
+                if (err) throw err;
+                if (!mainUser) {
+                    res.send({ success: false, message: 'No user found!' });
+                } else {
+                    if (mainUser.permission === 'admin') {
+                        //update menu.
+                        Menu.findOne({ _id: req.body._id }).select().exec(function (err, menu) {
+                            if (err) throw err;
+                            if (!menu) {
+                                res.send({ success: false, message: 'Something went wrong!' });
+                            } else {
+                                menu.submenus.push(req.body.submenu);
+                                menu.save(function (err) {
+                                    if (err) {
+                                        res.send({ success: false, message: err });
+                                    }
+                                    else {
+                                        res.send({ success: true, message: 'Submenu has succefully added.', submenus: menu.submenus });
                                     }
                                 });
 

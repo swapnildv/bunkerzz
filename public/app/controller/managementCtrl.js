@@ -98,6 +98,7 @@ angular.module('managementController', ['userServices', 'managementServices'])
         app.showCreateForm = false;
         app.menuEditMode = false;
         app.editing = false;
+        app.isActiveOptions = [true, false];
 
         app.getMenus = function () {
             Management.menuByCafe($routeParams.cafeid).then(function (data) {
@@ -123,7 +124,6 @@ angular.module('managementController', ['userServices', 'managementServices'])
                             app.getMenus();
                             app.loading = false;
                             app.errMsg = false;
-                            app.showCreateForm = false;
                             app.menuData = {};
                             $scope.menuForm.$setPristine();
                         }
@@ -142,6 +142,7 @@ angular.module('managementController', ['userServices', 'managementServices'])
 
 
         app.menuEdit = function (menu) {
+
             app.cancelUpdate();
             menu.menuEditMode = !menu.menuEditMode;
             app.editing = app.menus.indexOf(menu);
@@ -153,6 +154,7 @@ angular.module('managementController', ['userServices', 'managementServices'])
             app.loading = true;
             app.errMsg = false;
             app.succMsg = false;
+
             Management.updateMenuById(menu)
                 .then(function (data) {
                     app.loading = false;
@@ -162,6 +164,7 @@ angular.module('managementController', ['userServices', 'managementServices'])
                         app.loading = false;
                         app.menuData = {};
                         app.bufferMenu = {};
+                        app.editing = false;
                         $scope.menuForm.$setPristine();
                     }
                     else {
@@ -173,6 +176,7 @@ angular.module('managementController', ['userServices', 'managementServices'])
         }
 
         app.cancelUpdate = function () {
+
             if (app.editing !== false) {
                 app.newField.menuEditMode = !app.newField.menuEditMode;
                 app.menus[app.editing] = app.newField;
@@ -181,18 +185,34 @@ angular.module('managementController', ['userServices', 'managementServices'])
 
         }
 
-        app.addSubmenu = function (menu, submenu, isValid) {
-            menu.submenus = [];
-            menu.submenus.push(app.submenu);
+        app.addSubmenu = function (menu, isValid) {
+            var submenuData = { _id: menu._id, submenu: menu.submenu };
             if (isValid) {
-                app.menuUpdate(menu);
-                app.submenu = {};
+                app.loading = true;
+                app.errMsg = false;
+                app.succMsg = false;
+                Management.addSubmenu(submenuData)
+                    .then(function (data) {
+                        app.loading = false;
+                        if (data.data.success) {
+                            app.succMsg = data.data.message;
+                            //app.getMenus();
+                            menu.submenus = data.data.submenus;
+                            app.loading = false;
+                            menu.submenu = {};
+                            menu.submenuForm.$setPristine();
+                        }
+                        else {
+                            //Create error message
+                            app.errMsg = data.data.message;
+
+                        }
+                    });
+
             } else {
                 app.loading = false;
                 app.errMsg = "Please ensure form is filled properly";
             }
-            // app.submenus.push(app.submenu);
-            // app.submenu = {};
         }
 
     });
