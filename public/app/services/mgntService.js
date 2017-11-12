@@ -17,8 +17,8 @@ angular.module('managementServices', [])
         }
 
         //Management.menuByCafe();
-        mgmtFactory.menuByCafe = function (cafeid) {
-            return $http.get('/api/menu/' + cafeid);
+        mgmtFactory.menuByCafe = function (cafeid, isFilter) {
+            return $http.get('/api/menu/' + cafeid + '/' + isFilter);
         }
 
         //Management.updateMenuById();
@@ -30,7 +30,12 @@ angular.module('managementServices', [])
             return $http.put('/api/submenu/', submenuData);
         }
 
-        
+        //Management.getMenuByCafe(cafeid);
+        // mgmtFactory.getMenuByCafe = function (cafeid) {
+        //     return $http.get('/api/menu/' + cafeid);
+        // }
+
+
 
         return mgmtFactory;
     });

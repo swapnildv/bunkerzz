@@ -101,7 +101,7 @@ angular.module('managementController', ['userServices', 'managementServices'])
         app.isActiveOptions = [true, false];
 
         app.getMenus = function () {
-            Management.menuByCafe($routeParams.cafeid).then(function (data) {
+            Management.menuByCafe($routeParams.cafeid, false).then(function (data) {
                 if (data.data.success) {
                     app.menus = data.data.menus;
                     app.loading = false;

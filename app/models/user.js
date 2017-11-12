@@ -47,7 +47,7 @@ var userSchema = new Schema({
     password: { type: String, required: true, validate: passwordValidator },
     resettoken: { type: String, required: false },
     permission: { type: String, required: true, default: 'user' },
-    cafeId: { type: Schema.Types.ObjectId, required: true, ref: 'Cafe' }
+    cafeId: { type: Schema.Types.ObjectId, required: false, ref: 'Cafe' }
 });
 
 

@@ -73,3 +73,7 @@ header .navbar 		{
 .reset{
 	float: right;
 }
+
+.headerRow{
+	margin-bottom: 15px;
+}

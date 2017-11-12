@@ -29,11 +29,14 @@
     <script src="app/controller/userCtrl.js"></script>
     <script src="app/controller/mainCtrl.js"></script>
     <script src="app/controller/managementCtrl.js"></script>
+    <script src="app/controller/transactionCtrl.js"></script>
 
     <!-- Services. -->
     <script src="app/services/userServices.js"></script>
     <script src="app/services/authService.js"></script>
     <script src="app/services/mgntService.js"></script>
+    <script src="app/services/transactionService.js"></script>
+    
 
 
 
@@ -68,6 +71,9 @@
                     </li>
                     <li ng-show="main.isLoggedIn && main.authorised">
                         <a href="/cafe">Cafe</a>
+                    </li>
+                    <li ng-show="main.role === 'moderator' || main.role === 'user'">
+                        <a href="/order">Order</a>
                     </li>
                     <li ng-show="main.isLoggedIn && main.authorised">
                         <a href="/management">Management</a>

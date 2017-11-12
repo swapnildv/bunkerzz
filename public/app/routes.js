@@ -4,6 +4,7 @@ var app = angular.module('appRoutes', ['ngRoute']).
             templateUrl: 'app/views/pages/users/login.html',
             authenticated: false
         })
+
             .when('/home', {
                 templateUrl: 'app/views/pages/home.html',
                 authenticated: true
@@ -54,6 +55,12 @@ var app = angular.module('appRoutes', ['ngRoute']).
                 authenticated: true,
                 permission: ['admin','moderator']
             })
+            .when('/order', {
+                templateUrl: 'app/views/pages/transaction/order.html',
+                controller: 'transactionCtrl',
+                controllerAs: 'transaction',
+                authenticated: false
+            })
             .when('/logout', {
                 templateUrl: 'app/views/pages/users/logout.html',
                 authenticated: true
@@ -68,28 +75,29 @@ var app = angular.module('appRoutes', ['ngRoute']).
 
 app.run(['$rootScope', 'Auth', '$location', 'User', function ($rootScope, Auth, $location, User) {
     $rootScope.$on('$routeChangeStart', function (event, next, current) {
+        
         if (next.$$route.authenticated == true) {
             if (!Auth.isLoggedIn()) {
                 event.preventDefault();
-                $location.path('/');
+                $location.path('/home');
             } else if (next.$$route.permission) {
                 User.getPermission().then(function (data) {
+                   
                     //check for valid permissions.  
                     if (next.$$route.permission[0] != data.data.permission) {
                         if (next.$$route.permission[1] != data.data.permission) {
                             event.preventDefault();
-                            $location.path('/');
+                            $location.path('/home');
                         }
                     }
                 });
             }
-            //console.log('Needs to be authenticated');
-        } else if (next.$$route.authenticated == false) {
-            if (Auth.isLoggedIn()) {
-                event.preventDefault();
-                $location.path('/');
-            }
-            //console.log('Need not to be authenticated');
-        }
+        } 
+        // else if (next.$$route.authenticated == false) {
+        //     if (Auth.isLoggedIn()) {
+        //         event.preventDefault();
+        //         $location.path('/home');
+        //     }
+        // }
     });
 }]);

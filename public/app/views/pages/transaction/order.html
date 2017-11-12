@@ -1,0 +1,45 @@
+<div class="row headerRow">
+    <div class="col-md-4">
+
+    </div>
+    <div class="col-md-4">
+
+    </div>
+    <div class="col-md-4">
+        <button ng-show="transaction.cart.panels.length > 0" class="btn btn-info" ng-click="transaction.cart.panels = [];">Clear All</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="list-group">
+            <button type="button" ng-repeat="menu in transaction.menu" ng-click="transaction.changeMenu(menu);" class="list-group-item">{{menu.name}}</button>
+            <!-- <button type="button" class="list-group-item">Dapibus ac facilisis in</button>
+            <button type="button" class="list-group-item">Morbi leo risus</button>
+            <button type="button" class="list-group-item">Porta ac consectetur ac</button>
+            <button type="button" class="list-group-item">Vestibulum at eros</button> -->
+
+        </div>
+    </div>
+    <div class="col-md-4">
+        <button type="button" ng-repeat="submenu in transaction.selectedMenu.submenus" ng-click="transaction.addToCart(submenu)"
+            class="list-group-item">{{submenu.name}}</button>
+    </div>
+    <div class="col-md-4">
+        <button type="button" ng-repeat="panel in transaction.cart.panels" class="list-group-item">{{panel.name}}</button>
+    </div>
+</div>
+
+<div class="text-center" ng-show="transaction.loading">
+    <div class="spinner">
+    </div>
+</div>
+<br>
+<div class="row show-hide-message" ng-show="transaction.succMsg">
+    <div class="alert alert-success">{{transaction.succMsg}}</div>
+</div>
+<br>
+
+<div class="row show-hide-message" ng-show="transaction.errMsg">
+    <div class="alert alert-danger">{{transaction.errMsg}}</div>
+</div>

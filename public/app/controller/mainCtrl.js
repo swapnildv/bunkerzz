@@ -1,19 +1,26 @@
 angular.module('mainController', ['authService'])
-    .controller("mainCtrl", function (Auth, $timeout, $location, $rootScope,User) {
+    .controller("mainCtrl", function (Auth, $timeout, $location, $rootScope, User) {
         var app = this;
 
         $rootScope.$on('$routeChangeStart', function () {
             if (Auth.isLoggedIn()) {
 
                 app.isLoggedIn = true;
+                
                 Auth.getUser().then(function (data) {
-                    console.log(data.data.username);
-                    app.username = data.data.username;
-                    User.getPermission().then(function(data){
-                        if(data.data.permission === 'admin' ||  data.data.permission ==='moderator'){
+                   
+                    //  console.log(data.data.username);
+                    app.username = data.data.user.username;
+                    //console.log(data.data.user.cafeId);
+                    $rootScope.loggedInUser = data.data.user;
+                    User.getPermission().then(function (data) {
+                        console.log(data)
+                      
+                        app.role = data.data.permission;
+                        if (data.data.permission === 'admin' || data.data.permission === 'moderator') {
                             app.authorised = true;
                         }
-                        else{
+                        else {
                             app.authorised = false;
                         }
                     })

@@ -67,7 +67,7 @@ module.exports = function (router) {
 
     router.post('/authenticate', function (req, res) {
 
-        User.findOne({ username: req.body.username }).select('username password').exec(function (err, user) {
+        User.findOne({ username: req.body.username }).select('username password cafeId').exec(function (err, user) {
             if (err) throw err;
             if (!user) {
                 res.send({ success: false, message: 'Could not authenticate user' });
@@ -83,7 +83,7 @@ module.exports = function (router) {
                     res.send({ success: false, message: 'Could not authenticate password' });
                 }
                 else {
-                    var _token = jwt.sign({ username: user.username }, secret, { expiresIn: '24h' });
+                    var _token = jwt.sign({ user: user }, secret, { expiresIn: '24h' });
                     res.send({ success: true, message: 'User authenticated!', token: _token });
                 }
             }
@@ -285,7 +285,8 @@ module.exports = function (router) {
     });
 
     router.get('/permission', function (req, res) {
-        User.findOne({ username: req.decoded.username }).select('permission').exec(function (err, user) {
+        console.log(req.decoded.user.username);
+        User.findOne({ username: req.decoded.user.username }).select('permission').exec(function (err, user) {
             if (err) throw err;
             if (!user) {
                 res.send({ success: false, message: 'No user was found!' });
@@ -354,7 +355,7 @@ module.exports = function (router) {
     router.get('/cafe', function (req, res) {
         Cafe.find({}, function (err, cafes) {
             if (err) throw err;
-            User.findOne({ username: req.decoded.username }).select('permission').exec(function (err, mainUser) {
+            User.findOne({ username: req.decoded.user.username }).select('permission').exec(function (err, mainUser) {
                 if (err) throw err;
                 if (!mainUser) {
                     res.send({ success: false, message: 'No user found!' });
@@ -373,6 +374,29 @@ module.exports = function (router) {
         });
     });
 
+
+    //get menu by cafeid
+    router.get('/menu/:cafeid/:filter', function (req, res) {
+
+        Menu.find({ cafeid: req.params.cafeid }).select('').exec(function (err, menus) {
+            if (err) throw err;
+            if (!menus) {
+                res.send({ success: false, message: 'No menus found!' });
+            } else {
+                function menuFilter(menu) {
+                    return menu.submenus.length > 0 && menu.isActive == true;
+                }
+                if (req.params.filter == 'true') {
+                    menus = menus.filter(menuFilter);
+                }
+
+                res.send({ success: true, menus: menus });
+            }
+        })
+    });
+
+
+
     //create new menu.
     router.post('/menu', function (req, res) {
         var menu = new Menu();
@@ -386,7 +410,7 @@ module.exports = function (router) {
             res.json({ success: false, message: 'Ensure menu name is provided!' })
         }
         else {
-            User.findOne({ username: req.decoded.username }).select('permission').exec(function (err, mainUser) {
+            User.findOne({ username: req.decoded.user.username }).select('permission').exec(function (err, mainUser) {
                 if (err) throw err;
                 if (!mainUser) {
                     res.send({ success: false, message: 'No user found!' });
@@ -426,7 +450,7 @@ module.exports = function (router) {
         if (req.body.name == null || req.body.name == "") {
             res.json({ success: false, message: 'Ensure menu name is provided!' })
         } else {
-            User.findOne({ username: req.decoded.username }).select('permission').exec(function (err, mainUser) {
+            User.findOne({ username: req.decoded.user.username }).select('permission').exec(function (err, mainUser) {
                 if (err) throw err;
                 if (!mainUser) {
                     res.send({ success: false, message: 'No user found!' });
@@ -476,7 +500,7 @@ module.exports = function (router) {
             req.body._id == null) {
             res.json({ success: false, message: 'Ensure submenu data is provided' });
         } else {
-            User.findOne({ username: req.decoded.username }).select('permission').exec(function (err, mainUser) {
+            User.findOne({ username: req.decoded.user.username }).select('permission').exec(function (err, mainUser) {
                 if (err) throw err;
                 if (!mainUser) {
                     res.send({ success: false, message: 'No user found!' });
@@ -511,16 +535,7 @@ module.exports = function (router) {
     });
 
 
-    router.get('/menu/:cafeid', function (req, res) {
-        Menu.find({ cafeid: req.params.cafeid }).select('').exec(function (err, menus) {
-            if (err) throw err;
-            if (!menus) {
-                res.send({ success: false, message: 'No menus found!' });
-            } else {
-                res.send({ success: true, menus: menus });
-            }
-        })
-    });
+
 
 
     return router;
