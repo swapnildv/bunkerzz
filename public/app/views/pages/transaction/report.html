@@ -1,0 +1,17 @@
+<div class="row">
+    <div class="panel-heading">
+        <strong>Order Summary</strong>
+    </div>
+    <table class="table">
+        <tr>
+            <th>#</th>
+            <th>Amount (Rs.)</th>
+            <th>Time</th>
+        </tr>
+        <tr ng-repeat="tran in report.transactions">
+            <td>{{$index}}</td>
+            <td>{{tran.totalcost}}</td>
+            <td>{{tran.createdDate}}</td>
+        </tr>
+    </table>
+</div>

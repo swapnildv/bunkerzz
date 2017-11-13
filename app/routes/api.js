@@ -14,6 +14,9 @@ var transporter = nodemailer.createTransport({
     auth: {
         user: 'cafebunkerz@gmail.com',
         pass: 'CafeBunkerz1989'
+    },
+    tls: {
+        rejectUnauthorized: false
     }
 });
 
@@ -171,7 +174,7 @@ module.exports = function (router) {
                                 html: 'Hello <strong>' + user.username + '</strong>,<br><br>You recently requested a password reset link.Please click on the link below to reset your password : ' +
                                 '<br><br><a href="http://localhost:8080/reset/' + user.resettoken + '">http://localhost:8080/reset/</a>'
                             };
-
+                            console.log('email sent');
                             transporter.sendMail(mailOptions, function (err, info) {
                                 if (err)
                                     console.log(err)
@@ -536,7 +539,30 @@ module.exports = function (router) {
 
     });
 
+    //get transaction report
+    router.get('/reports/transaction/:cafeid', function (req, res) {
 
+        Transaction.find({ cafeid: req.params.cafeid }).select('').exec(function (err, trans) {
+            if (err) throw err;
+            User.findOne({ username: req.decoded.user.username }).select('permission').exec(function (err, mainUser) {
+                if (err) throw err;
+                if (!mainUser) {
+                    res.send({ success: false, message: 'No user found!' });
+                } else {
+                    if (mainUser.permission === 'admin' || mainUser.permission === 'moderator') {
+                        if (!trans) {
+                            res.send({ success: false, message: 'Transacttions not found!' });
+                        } else {
+                            res.send({ success: true, transactions: trans });
+                        }
+                    } else {
+                        res.send({ success: false, message: 'Insifficient permissions.' });
+                    }
+                }
+            })
+
+        });
+    });
     //add transaction.
     router.post('/transaction', function (req, res) {
 
@@ -560,7 +586,7 @@ module.exports = function (router) {
                 transaction.details.push(element);
             }, this);
 
-            
+
             transaction.save(function (err) {
                 if (err) {
                     if (err) {
@@ -572,6 +598,9 @@ module.exports = function (router) {
             });
         }
     });
+
+
+
 
 
 

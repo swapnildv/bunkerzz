@@ -53,13 +53,20 @@ var app = angular.module('appRoutes', ['ngRoute']).
                 controller: 'menuCtrl',
                 controllerAs: 'menu',
                 authenticated: true,
-                permission: ['admin','moderator']
+                permission: ['admin', 'moderator']
             })
             .when('/order', {
                 templateUrl: 'app/views/pages/transaction/order.html',
                 controller: 'transactionCtrl',
                 controllerAs: 'transaction',
                 authenticated: false
+            })
+            .when('/reports/transactions', {
+                templateUrl: 'app/views/pages/transaction/report.html',
+                controller: 'reportCtrl',
+                controllerAs: 'report',
+                authenticated: true,
+                permission: ['admin', 'moderator']
             })
             .when('/logout', {
                 templateUrl: 'app/views/pages/users/logout.html',
@@ -75,14 +82,14 @@ var app = angular.module('appRoutes', ['ngRoute']).
 
 app.run(['$rootScope', 'Auth', '$location', 'User', function ($rootScope, Auth, $location, User) {
     $rootScope.$on('$routeChangeStart', function (event, next, current) {
-        
+
         if (next.$$route.authenticated == true) {
             if (!Auth.isLoggedIn()) {
                 event.preventDefault();
                 $location.path('/home');
             } else if (next.$$route.permission) {
                 User.getPermission().then(function (data) {
-                   
+
                     //check for valid permissions.  
                     if (next.$$route.permission[0] != data.data.permission) {
                         if (next.$$route.permission[1] != data.data.permission) {
@@ -92,7 +99,7 @@ app.run(['$rootScope', 'Auth', '$location', 'User', function ($rootScope, Auth, 
                     }
                 });
             }
-        } 
+        }
         // else if (next.$$route.authenticated == false) {
         //     if (Auth.isLoggedIn()) {
         //         event.preventDefault();

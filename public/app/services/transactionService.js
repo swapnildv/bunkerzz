@@ -7,6 +7,11 @@ angular.module('transactionServices', [])
             return $http.post('/api/transaction', orderData)
         }
 
+        //TransactionService.getTransactionReport()
+        transactionFactory.getTransactionReport = function (cafeid) {
+            return $http.get('/api/reports/transaction/' + cafeid);
+        }
+
         return transactionFactory;
 
-     });
+    });

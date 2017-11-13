@@ -72,8 +72,11 @@
                     <li ng-show="main.isLoggedIn && main.authorised">
                         <a href="/cafe">Cafe</a>
                     </li>
-                    <li ng-show="main.role === 'moderator' || main.role === 'user'">
+                    <li ng-show="main.isLoggedIn && (main.isLoggedInmain.role === 'moderator' || main.role === 'user')">
                         <a href="/order">Order</a>
+                    </li>
+                    <li ng-show="main.isLoggedIn && main.authorised">
+                        <a href="/reports/transactions">Reports</a>
                     </li>
                     <li ng-show="main.isLoggedIn && main.authorised">
                         <a href="/management">Management</a>

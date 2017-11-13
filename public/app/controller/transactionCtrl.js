@@ -1,6 +1,6 @@
 angular.module('transactionController', ['transactionServices', 'managementServices'])
     .controller('transactionCtrl', function (TransactionService, Management, $rootScope, $scope) {
-        console.log('transaction controller');
+
 
         var app = this;
         app.loading = true;
@@ -12,7 +12,7 @@ angular.module('transactionController', ['transactionServices', 'managementServi
         // app.cart.panels = [];
         app.orderData = {};
         app.getMenu = function () {
-
+            console.log($rootScope.loggedInUser.cafeId);
             if ($rootScope.loggedInUser) {
 
                 Management.menuByCafe($rootScope.loggedInUser.cafeId, true).then(function (data) {
@@ -43,9 +43,9 @@ angular.module('transactionController', ['transactionServices', 'managementServi
         }
 
         app.removeFromCart = function (panel) {
-            
+
             var index = app.orderData.details.indexOf(panel);
-            if (index!=null) {
+            if (index != null) {
                 app.orderData.details.splice(index, 1);
             }
         }
@@ -98,4 +98,34 @@ angular.module('transactionController', ['transactionServices', 'managementServi
             }
             return total
         }
-    }); 
+    }).controller('reportCtrl', function (TransactionService, $rootScope, $scope) {
+        //console.log(reportCtrl);
+        var app = this;
+        app.loading = true;
+        app.errMsg = false;
+        app.succMsg = false;
+        app.selectedMenu = {};
+
+        // app.cart = {};
+        // app.cart.panels = [];
+        app.orderData = {};
+        app.getTransactionReport = function () {
+debugger;
+            if ($rootScope.loggedInUser) {
+
+                TransactionService.getTransactionReport($rootScope.loggedInUser.cafeId).then(function (data) {
+                    if (data.data.success) {
+                        debugger;
+                        app.transactions = data.data.transactions;
+                        app.loading = false;
+
+                    } else {
+                        app.errorMsg = data.data.message;
+                        app.loading = false;
+                    }
+                });
+            }
+        }
+
+        app.getTransactionReport();
+    });
