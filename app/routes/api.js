@@ -2,6 +2,8 @@
 var User = require('../models/user');
 var Cafe = require('../models/cafe');
 var Menu = require('../models/menu');
+var Transaction = require('../models/transaction');
+
 
 var nodemailer = require('nodemailer');
 var jwt = require('jsonwebtoken');
@@ -533,6 +535,44 @@ module.exports = function (router) {
         }
 
     });
+
+
+    //add transaction.
+    router.post('/transaction', function (req, res) {
+
+
+
+        if (req.body.totalcost == null || req.body.totalcost == 0 || req.body.user == null || req.body.cafeid == null ||
+            req.body.details == null) {
+            res.json({ success: false, message: 'Invalid order details!' })
+        }
+        else {
+
+            //create order
+            var transaction = new Transaction();
+            transaction.user = req.body.user;
+            transaction.cafeid = req.body.cafeid;
+            transaction.createdDate = new Date();
+            transaction.totalcost = req.body.totalcost;
+
+
+            req.body.details.forEach(function (element) {
+                transaction.details.push(element);
+            }, this);
+
+            
+            transaction.save(function (err) {
+                if (err) {
+                    if (err) {
+                        res.json({ success: false, message: err });
+                    }
+                } else {
+                    res.json({ success: true, message: 'Order succesfully sent', transaction: transaction });
+                }
+            });
+        }
+    });
+
 
 
 

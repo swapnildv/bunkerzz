@@ -77,3 +77,10 @@ header .navbar 		{
 .headerRow{
 	margin-bottom: 15px;
 }
+
+/*
+order.html	
+*/
+.order-badge{
+	font-size: 17px;
+}

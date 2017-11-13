@@ -6,7 +6,22 @@
 
     </div>
     <div class="col-md-4">
-        <button ng-show="transaction.cart.panels.length > 0" class="btn btn-info" ng-click="transaction.cart.panels = [];">Clear All</button>
+        <div class="row">
+            <div class="col-md-4">
+                <button ng-show="transaction.orderData.details.length > 0" class="btn btn-info" ng-click="transaction.orderData.details = [];">Clear All</button>
+            </div>
+            <div class="col-md-4">
+                <button ng-show="transaction.orderData.details.length > 0" class="btn btn-success" ng-click="transaction.placeOrder(panelForm.$valid);">Place Order</button>
+            </div>
+            <div class="col-md-4">
+                <h3 ng-show="transaction.orderData.details.length > 0">Total :
+                    <span class="label label-default">{{transaction.getTotal()}}</span>
+                </h3>
+            </div>
+
+        </div>
+
+
     </div>
 </div>
 
@@ -22,11 +37,61 @@
         </div>
     </div>
     <div class="col-md-4">
+
         <button type="button" ng-repeat="submenu in transaction.selectedMenu.submenus" ng-click="transaction.addToCart(submenu)"
-            class="list-group-item">{{submenu.name}}</button>
+            class="list-group-item">{{submenu.name}}
+            <span class="label label-default">Rs.{{submenu.price}}</span>
+
+        </button>
+
+
+
+
     </div>
     <div class="col-md-4">
-        <button type="button" ng-repeat="panel in transaction.cart.panels" class="list-group-item">{{panel.name}}</button>
+
+
+        <!-- <button type="button" class="list-group-item">{{panel.name}}
+            <span class="label label-default">Rs. {{panel.cost}}</span>
+            <div class="input-group">
+                <span class="input-group-addon">Qty</span>
+                <input class="form-control" name="qty" type="number" ng-model="panel.qty" ng-change="updateQty(panel);">
+
+            </div>
+        </button> -->
+        <form name="panelForm">
+            <div class="panel panel-default" ng-repeat="panel in transaction.orderData.details">
+                <div class="panel-heading">
+                    <div class="row">
+                        <p class="col-md-6" class="panel-title">
+                            <strong>{{panel.submenu}}</strong>
+                        </p>
+                        <p class="col-md-4" class="panel-title">
+                            <span class="badge order-badge">Rs. {{panel.cost}}</span>
+                        </p>
+                        <div class="col-md-2">
+                            <!-- <button class="btn btn-danger" type="button" ng-click="transaction.removeFromCart(panel);">Remove</button> -->
+                            <button type="button" class="close" ng-click="transaction.removeFromCart(panel);">&times;</button>
+                        </div>
+                    </div>
+
+                </div>
+                <div ng-form="cellForm" class="panel-body">
+                    <div class="input-group">
+                        <span class="input-group-addon">Qty</span>
+                        <input class="form-control" min="1" name="qty" type="number" ng-model="panel.qty" ng-change="updateQty(panel,cellForm.qty.$valid);"
+                            ng-pattern="/^[0-9]\d*(\.\d+)?$/" required>
+                    </div>
+                    <div ng-show="cellForm.$dirty && cellForm.$invalid">
+                        <span ng-show="cellForm.qty.$error.required" style="color:red">
+                            This field is required
+                        </span>
+                        <span style="color:red" ng-show="(!cellForm.qty.$pristine && cellForm.qty.$error.pattern)">
+                            Please enter valid price!</span>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 
