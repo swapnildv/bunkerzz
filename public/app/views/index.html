@@ -69,18 +69,18 @@
                     <li ng-show="!main.isLoggedIn">
                         <a href="/register">Register</a>
                     </li>
-                    <li ng-show="main.isLoggedIn && main.authorised">
+                    <li ng-show="main.isLoggedIn && main.authorised ">
                         <a href="/cafe">Cafe</a>
                     </li>
-                    <li ng-show="main.isLoggedIn && (main.isLoggedInmain.role === 'moderator' || main.role === 'user')">
+                    <li ng-show="main.isLoggedIn && (main.role === 'moderator' || main.role === 'user')">
                         <a href="/order">Order</a>
                     </li>
-                    <li ng-show="main.isLoggedIn && main.authorised">
+                    <li ng-show="main.isLoggedIn && (main.role === 'moderator' || main.role === 'admin')">
                         <a href="/reports/transactions">Reports</a>
                     </li>
-                    <li ng-show="main.isLoggedIn && main.authorised">
+                    <!-- <li ng-show="main.isLoggedIn && main.authorised">
                         <a href="/management">Management</a>
-                    </li>
+                    </li> -->
                     <li ng-show="main.isLoggedIn">
                         <a href="#" ng-click="main.logout();">Logout</a>
                     </li>
