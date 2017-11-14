@@ -500,7 +500,6 @@ module.exports = function (router) {
     //insert submenu item
     router.put('/submenu', function (req, res) {
 
-
         if (req.body.submenu == null || req.body.submenu == "" ||
             req.body._id == null) {
             res.json({ success: false, message: 'Ensure submenu data is provided' });
@@ -540,9 +539,11 @@ module.exports = function (router) {
     });
 
     //get transaction report
-    router.get('/reports/transaction/:cafeid', function (req, res) {
-
-        Transaction.find({ cafeid: req.params.cafeid }).select('').exec(function (err, trans) {
+    router.put('/reports/transaction', function (req, res) {
+        //{ createdDate: { $gte: date1, $lte: date2 }
+        console.log(req.body);
+        console.log(new Date('2017-11-13'));
+        Transaction.find({ cafeid: req.body.cafeid, createdDate: { $gte: req.body.fromdate, $lte: req.body.todate } }).select('').exec(function (err, trans) {
             if (err) throw err;
             User.findOne({ username: req.decoded.user.username }).select('permission').exec(function (err, mainUser) {
                 if (err) throw err;

@@ -1,5 +1,6 @@
 angular.module('bunkerzz',
-    ['appRoutes',
+    ['angularUtils.directives.dirPagination',
+        'appRoutes',
         'userController',
         'userServices',
         'ngAnimate',

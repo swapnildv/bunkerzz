@@ -101,31 +101,65 @@ angular.module('transactionController', ['transactionServices', 'managementServi
     }).controller('reportCtrl', function (TransactionService, $rootScope, $scope) {
         //console.log(reportCtrl);
         var app = this;
-        app.loading = true;
+        app.loading = false;
         app.errMsg = false;
         app.succMsg = false;
-        app.selectedMenu = {};
+        app.maxDate = new Date();
+        $scope.fromDateModel = new Date();
+        $scope.toDateModel = new Date();
+        //watch on fromDate.
+        $scope.$watch('fromDateModel', validateDates);
+        $scope.$watch('toDateModel', validateDates);
 
-        // app.cart = {};
-        // app.cart.panels = [];
-        app.orderData = {};
-        app.getTransactionReport = function () {
-debugger;
-            if ($rootScope.loggedInUser) {
-
-                TransactionService.getTransactionReport($rootScope.loggedInUser.cafeId).then(function (data) {
-                    if (data.data.success) {
-                        debugger;
-                        app.transactions = data.data.transactions;
-                        app.loading = false;
-
-                    } else {
-                        app.errorMsg = data.data.message;
-                        app.loading = false;
-                    }
-                });
+        function validateDates() {
+            if (!$scope.fromDateModel || !$scope.toDateModel) return;
+            if (!$scope.myForm.fromDateControl.$valid || !$scope.myForm.toDateControl.$valid) {
+                $scope.myForm.fromDateControl.$setValidity("endBeforeStart", true);  //already invalid (per validDate directive)
+            }
+            else {
+                var toDate = new Date($scope.toDateModel);
+                var fromDate = new Date($scope.fromDateModel);
+                $scope.myForm.fromDateControl.$setValidity("endBeforeStart", toDate >= fromDate);
             }
         }
 
-        app.getTransactionReport();
+        app.getTransactionReports = function (isValid) {
+            if (isValid) {
+                app.errMsg = false;
+                app.succMsg = false;
+                app.loading = true;
+
+                var reportData = { cafeid: $rootScope.loggedInUser.cafeId, fromdate: $scope.fromDateModel, todate: $scope.toDateModel };
+                reportData.fromdate = new Date(reportData.fromdate.setHours(0, 0, 0));
+                reportData.todate = new Date(reportData.todate.setHours(23, 59, 59));
+
+                console.log(reportData);
+                //console.log(reportData.fromdate.setHours('0,0,0,0'));
+
+                if ($rootScope.loggedInUser) {
+                    TransactionService.getTransactionReport(reportData).then(function (data) {
+                        if (data.data.success) {
+                            app.transactions = data.data.transactions;
+                            app.loading = false;
+
+                        } else {
+                            app.errorMsg = data.data.message;
+                            app.loading = false;
+                        }
+                    });
+                }
+            }
+            else {
+                app.loading = false;
+                app.errMsg = "Please ensure dates are valid!";
+                app.transactions = [];
+            }
+        }
+
+        $scope.sort = function (keyname) {
+            $scope.sortKey = keyname;   //set the sortKey to the param passed
+            $scope.reverse = !$scope.reverse; //if true make it false and vice versa
+        }
+
+        //app.getTransactionReport();
     });

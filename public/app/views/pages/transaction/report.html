@@ -1,17 +1,83 @@
-<div class="row">
+<form name="myForm" ng-submit="report.getTransactionReports(myForm.$valid);" novalidate>
+    <div class="row">
+
+        <div class="col-md-4">
+            <label for="fromDate">From Date:</label>
+            <input type="date" id="fromDate" name="fromDateControl" ng-model="fromDateModel" placeholder="yyyy-MM-dd" min="2013-01-01"
+                max="{{report.maxDate}}" required />
+            <div role="alert">
+
+
+                <span class="help-block" ng-show="myForm.fromDateControl.$error.required">
+                    Required!</span>
+                <span class="help-block" ng-show="myForm.fromDateControl.$error.max">
+                    Future Dates are not allowed!</span>
+                <span class="help-block" ng-show="myForm.fromDateControl.$error.min">
+                    Historical dates are not allowed!</span>
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+            <label for="toDate">To Date:</label>
+            <input type="date" id="toDate" name="toDateControl" ng-model="toDateModel" placeholder="yyyy-MM-dd" min="2013-01-01" max="{{report.maxDate}}"
+                required />
+            <div role="alert">
+                <span class="help-block" ng-show="myForm.fromDateControl.$error.endBeforeStart">End date must be on or after start date.</span>
+                <span class="help-block" ng-show="myForm.toDateControl.$error.max">
+                    Future Dates are not allowed!</span>
+                <span class="help-block" ng-show="myForm.toDateControl.$error.min">
+                    Historical dates are not allowed!</span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-success" type="submit">Submit</button>
+        </div>
+
+    </div>
+</form>
+
+<div class="row" ng-show="report.transactions.length > 0">
     <div class="panel-heading">
         <strong>Order Summary</strong>
     </div>
-    <table class="table">
+    <form class="form-inline">
+        <div class="form-group">
+            <label>Search</label>
+            <input type="text" ng-model="search" class="form-control" placeholder="Search">
+        </div>
+    </form>
+    <table class="table table-striped table-hover">
         <tr>
             <th>#</th>
-            <th>Amount (Rs.)</th>
-            <th>Time</th>
+            <th ng-click="sort('totalcost')">Amount (Rs.)
+                <span class="glyphicon sort-icon" ng-show="sortKey=='totalcost'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+            </th>
+            <th ng-click="sort('createdDate')">Time
+                <span class="glyphicon sort-icon" ng-show="sortKey=='createdDate'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+            </th>
         </tr>
-        <tr ng-repeat="tran in report.transactions">
+        <tr dir-paginate="tran in report.transactions|orderBy:sortKey:reverse|filter:search|itemsPerPage:5">
             <td>{{$index}}</td>
             <td>{{tran.totalcost}}</td>
-            <td>{{tran.createdDate}}</td>
+            <td>{{tran.createdDate | date:'medium'}}</td>
         </tr>
+
     </table>
+    <dir-pagination-controls max-size="5" direction-links="true" boundary-links="true">
+    </dir-pagination-controls>
+</div>
+
+<div class="text-center" ng-show="report.loading">
+    <div class="spinner">
+    </div>
+</div>
+<br>
+<div class="row show-hide-message" ng-show="report.succMsg">
+    <div class="alert alert-success">{{report.succMsg}}</div>
+</div>
+<br>
+
+<div class="row show-hide-message" ng-show="report.errMsg">
+    <div class="alert alert-danger">{{report.errMsg}}</div>
 </div>

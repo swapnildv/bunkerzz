@@ -8,8 +8,9 @@ angular.module('transactionServices', [])
         }
 
         //TransactionService.getTransactionReport()
-        transactionFactory.getTransactionReport = function (cafeid) {
-            return $http.get('/api/reports/transaction/' + cafeid);
+        transactionFactory.getTransactionReport = function (reportData) {
+            //var reqData = { fromdate: new Date(), toDate: new Date() };
+            return $http.put('/api/reports/transaction/', reportData);
         }
 
         return transactionFactory;

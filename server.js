@@ -38,7 +38,9 @@ mongoose.connect('mongodb://swapnil:swapnil@ds243325.mlab.com:43325/bunkerzz', f
 app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname + '/public/app/views/index.html'));
 })
-
+process.on('uncaughtException', function (err) {
+    console.log(err);
+})
 app.listen(process.env.PORT || port, function () {
     console.log('listening');
 });
