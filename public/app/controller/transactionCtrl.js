@@ -91,6 +91,62 @@ angular.module('transactionController', ['transactionServices', 'managementServi
             }
         }
 
+
+        $scope.Print = function () {
+            console.log('print');
+            var printContents, popupWin;
+            printContents = document.getElementById('print-section').innerHTML;
+            popupWin = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');
+            popupWin.document.open();
+            popupWin.document.write(`
+                  <html>
+                    <head>
+                      <title>Bet Summary</title>
+                      <style type="text/css" media="print">
+                        @page 
+                        {
+                            size: auto;   /* auto is the initial value  */
+                            margin: 0mm;  /* this affects the margin in the printer settings */
+                            margin-left: 3mm;
+                            /* margin-right: 0mm !important;  */
+                        }
+                        body {
+                          font-size:12px !important;
+                        }
+            
+            
+                        /*  html
+                        {
+                            background-color: #FFFFFF; 
+                            margin: 0px;  /* this affects the margin on the html before sending to printer */
+                        }
+            
+                        body
+                        {
+                            border: solid 1px blue ;
+                            margin: 10mm 15mm 10mm 15mm; /* margin you want for the content */
+                        }   */
+            
+            
+                      </style>
+                      <!-- Latest compiled and minified CSS -->
+                          <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
+                          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+            
+                          <!-- Optional theme -->
+                          <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" 
+                          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+            
+                          <!-- Latest compiled and minified JavaScript -->
+                          <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" 
+                          integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+                    </head>
+                <body onload="window.print();window.close();">${printContents}</body>
+                  </html>`
+            );
+            popupWin.document.close();
+        }
+
         Array.prototype.sum = function (prop) {
             var total = 0
             for (var i = 0, _len = this.length; i < _len; i++) {
@@ -161,5 +217,7 @@ angular.module('transactionController', ['transactionServices', 'managementServi
             $scope.reverse = !$scope.reverse; //if true make it false and vice versa
         }
 
-        //app.getTransactionReport();
+        //Printing
+
+
     });
