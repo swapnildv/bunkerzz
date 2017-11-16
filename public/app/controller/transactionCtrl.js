@@ -14,6 +14,11 @@ angular.module('transactionController', ['transactionServices', 'managementServi
         app.getMenu = function () {
             console.log($rootScope.loggedInUser.cafeId);
             if ($rootScope.loggedInUser) {
+                if (!$rootScope.loggedInUser.cafeId) {
+                    app.errorMsg = 'Invalid cafe Details';
+                    app.loading = false;
+                }
+
 
                 Management.menuByCafe($rootScope.loggedInUser.cafeId, true).then(function (data) {
 
