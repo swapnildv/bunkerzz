@@ -126,12 +126,13 @@
                         <span>Bunkerzzz</span>
                     </strong>
                 </div>
-                <div class="panel-heading betSummaryHeader visible-print text-center">
+                <!-- Logo -->
+                <!-- <div class="panel-heading betSummaryHeader visible-print text-center">
                     <span> {{ betResponse?.TSN }} </span>
                     <br>
                     <img src="../assets/images/logo.jpg" />
                     <div class="clearfix"></div>
-                </div>
+                </div> -->
                 <div class="panel-body betSummaryPanel">
                     <div> {{ betResponse?.CurrentDateTime.replace('T', ' ')}} </div>
                     <div class="row" *ngFor="let panel of this._betPanels" style="border-bottom: solid #979797 1px; padding-bottom: 10px; padding-top: 10px;">
