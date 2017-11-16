@@ -95,6 +95,7 @@
     </div>
 </div>
 
+<button type="button" ng-click="Print()">Print</button>
 <div class="text-center" ng-show="transaction.loading">
     <div class="spinner">
     </div>
@@ -107,4 +108,75 @@
 
 <div class="row show-hide-message" ng-show="transaction.errMsg">
     <div class="alert alert-danger">{{transaction.errMsg}}</div>
+</div>
+
+<!--Printing-->
+
+
+
+<div id="print-section">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Print Section</h1>
+            <div class="panel panel-default" style="margin-bottom: -2px;">
+               
+
+                <div class="panel-heading betSummaryHeader text-center hidden-print visible-xs visible-sm-block hidden-md hidden-lg">
+                    <strong>
+                        <span>Bunkerzzz</span>
+                    </strong>
+                </div>
+                <div class="panel-heading betSummaryHeader visible-print text-center">
+                    <span> {{ betResponse?.TSN }} </span>
+                    <br>
+                    <img src="../assets/images/logo.jpg" />
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body betSummaryPanel">
+                    <div> {{ betResponse?.CurrentDateTime.replace('T', ' ')}} </div>
+                    <div class="row" *ngFor="let panel of this._betPanels" style="border-bottom: solid #979797 1px; padding-bottom: 10px; padding-top: 10px;">
+                        <div class="col-md-12">
+                            <strong>{{ panel.row1 }}</strong>
+                            <span class="pull-right">{{panel._odds}}</span>
+                        </div>
+                        <div class="col-md-12">{{ panel.row2 }}</div>
+                        <div class="col-md-12">{{ panel.row3 }}</div>
+                        <div class="col-md-12">Stake : {{panel.Stake}}</div>
+                        <div class="col-md-12">Potential : {{panel.PotentialLiability}}</div>
+                    </div>
+
+                    <div class="row" *ngFor="let panel of this._systemPanels" style="border-bottom: solid #979797 1px; padding-bottom: 10px; padding-top: 10px;">
+                        <div class="col-md-12">
+                            <strong>{{ panel.BetTypeName }}</strong>
+                        </div>
+                        <div class="col-md-12">{{ panel.count }} x {{ panel.stake }} = {{ panel.count * panel.stake }} </div>
+                     
+                    </div>
+
+                    <div class="row visible-print" style="margin-top: 15px">
+                        <div class="col-xs-6 col-sm-6">
+                            Total Stake :
+                            <span style="font-weight:bold">{{ totalStake }}</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="panel panel-default betSummaryFooter" style="margin-bottom: 0px">
+                <div class="row">
+                    <div class="col-md-4 col-xs-12 col-sm-12 col-lg-4 hidden-print">
+                        Total Stake :
+                        <span style="font-weight:bold">{{ totalStake }}</span>
+                    </div>
+                    <div class="col-md-4 col-xs-12 col-sm-12 col-lg-4 text-center">
+                        <svg id="barcode" class="visible-print"></svg>
+                    </div>
+                    <div class="col-md-4 col-xs-12 col-sm-12 col-lg-4">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

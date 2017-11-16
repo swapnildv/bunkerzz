@@ -17,7 +17,7 @@ angular.module('mainController', ['authService'])
                         console.log(data)
                       
                         app.role = data.data.permission;
-                        if (data.data.permission === 'admin' || data.data.permission === 'moderator') {
+                        if (data.data.permission === 'admin') {
                             app.authorised = true;
                         }
                         else {
@@ -50,7 +50,7 @@ angular.module('mainController', ['authService'])
                             $location.path('/home');
                             app.loginData = {};
                             app.succMsg = '';
-                        }, 2000);
+                        }, 1000);
 
                     }
                     else {
@@ -65,6 +65,6 @@ angular.module('mainController', ['authService'])
             $location.path('/logout');
             $timeout(function () {
                 $location.path('/');
-            }, 2000)
+            }, 100);
         }
     });
