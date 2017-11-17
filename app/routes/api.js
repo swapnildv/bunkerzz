@@ -379,6 +379,29 @@ module.exports = function (router) {
         });
     });
 
+    //get a single cafe
+    router.get('/cafe/:cafeid', function (req, res) {
+        Cafe.findOne({ cafeId: req.params.cafeid }).select().exec(function (err, cafe) {
+            if (err) throw err;
+            User.findOne({ username: req.decoded.user.username }).select('permission').exec(function (err, mainUser) {
+                if (err) throw err;
+                if (!mainUser) {
+                    res.send({ success: false, message: 'No user found!' });
+                } else {
+                    if (mainUser.permission === 'admin') {
+                        if (!cafes) {
+                            res.send({ success: false, message: 'Cafes not found!' });
+                        } else {
+                            res.send({ success: true, cafes: cafes, permission: mainUser.permission });
+                        }
+                    } else {
+                        res.send({ success: false, message: 'Insifficient permissions.' });
+                    }
+                }
+            });
+        });
+    });
+
 
     //get menu by cafeid
     router.get('/menu/:cafeid/:filter', function (req, res) {

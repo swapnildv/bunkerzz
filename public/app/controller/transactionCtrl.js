@@ -81,6 +81,8 @@ angular.module('transactionController', ['transactionServices', 'managementServi
                 app.succMsg = false;
                 TransactionService.placeOrder(app.orderData).then(function (data) {
                     if (data.data.success) {
+                        debugger;
+                        app.printData = angular.copy(app.orderData);
                         app.orderData.details = [];
                         app.loading = false;
                         app.succMsg = data.data.message;
