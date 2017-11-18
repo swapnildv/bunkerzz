@@ -21,6 +21,13 @@ angular.module('managementServices', [])
             return $http.get('/api/menu/' + cafeid + '/' + isFilter);
         }
 
+        //Management.menuByCafe();
+        mgmtFactory.getCafeById = function (cafeid) {
+            return $http.get('/api/cafe/' + cafeid);
+        }
+
+
+
         //Management.updateMenuById();
         mgmtFactory.updateMenuById = function (menuData) {
             return $http.put('/api/menu/', menuData);

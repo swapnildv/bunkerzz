@@ -329,8 +329,13 @@ module.exports = function (router) {
         var cafe = new Cafe();
         cafe.name = req.body.name;
         cafe.address = req.body.address;
-        if (req.body.name == null || req.body.name == "" || req.body.address == null || req.body.address == "") {
-            res.json({ success: false, message: 'Ensure cafe name and address were provided' })
+        cafe.gst = req.body.gst;
+        cafe.phone = req.body.phone;
+        cafe.email = req.body.email;
+        if (req.body.name == null || req.body.name == "" || req.body.address == null || req.body.address == "" ||
+            req.body.gst == null || req.body.gst == "" || req.body.phone == null || req.body.phone == "" ||
+            req.body.email == null || req.body.email == "") {
+            res.json({ success: false, message: 'Ensure all required information were provided' });
         }
         else {
             cafe.save(function (err) {
@@ -381,24 +386,15 @@ module.exports = function (router) {
 
     //get a single cafe
     router.get('/cafe/:cafeid', function (req, res) {
-        Cafe.findOne({ cafeId: req.params.cafeid }).select().exec(function (err, cafe) {
-            if (err) throw err;
-            User.findOne({ username: req.decoded.user.username }).select('permission').exec(function (err, mainUser) {
-                if (err) throw err;
-                if (!mainUser) {
-                    res.send({ success: false, message: 'No user found!' });
-                } else {
-                    if (mainUser.permission === 'admin') {
-                        if (!cafes) {
-                            res.send({ success: false, message: 'Cafes not found!' });
-                        } else {
-                            res.send({ success: true, cafes: cafes, permission: mainUser.permission });
-                        }
-                    } else {
-                        res.send({ success: false, message: 'Insifficient permissions.' });
-                    }
-                }
-            });
+        console.log(req.params.cafeid);
+        Cafe.findOne({ _id: req.params.cafeid }).select().exec(function (err, cafe) {
+            if (err) console.log(err);
+            if (!cafe) {
+                res.send({ success: false, message: 'Cafe not found!' });
+            } else {
+                res.send({ success: true, cafe: cafe });
+            }
+
         });
     });
 
@@ -597,29 +593,46 @@ module.exports = function (router) {
             res.json({ success: false, message: 'Invalid order details!' })
         }
         else {
-
-            //create order
-            var transaction = new Transaction();
-            transaction.user = req.body.user;
-            transaction.cafeid = req.body.cafeid;
-            transaction.createdDate = new Date();
-            transaction.totalcost = req.body.totalcost;
-
-
-            req.body.details.forEach(function (element) {
-                transaction.details.push(element);
-            }, this);
-
-
-            transaction.save(function (err) {
-                if (err) {
-                    if (err) {
-                        res.json({ success: false, message: err });
-                    }
+            //get cafe details.
+            Cafe.findOne({ _id: req.body.cafeid }).select().exec(function (err, cafe) {
+                if (err) console.log(err);
+                if (!cafe) {
+                    res.send({ success: false, message: 'Cafe not found!' });
                 } else {
-                    res.json({ success: true, message: 'Order succesfully sent', transaction: transaction });
+
+
+                    //create order
+                    var transaction = new Transaction();
+                    transaction.user = req.body.user;
+                    transaction.cafeid = req.body.cafeid;
+                    transaction.createdDate = new Date();
+                    transaction.totalcost = req.body.totalcost;
+                    transaction.sgst = ((cafe.gst.sgst / 100) * req.body.totalcost);
+                    transaction.cgst = ((cafe.gst.cgst / 100) * req.body.totalcost);
+
+                    req.body.details.forEach(function (element) {
+                        transaction.details.push(element);
+                    }, this);
+
+
+                    transaction.save(function (err) {
+                        if (err) {
+                            if (err) {
+                                res.json({ success: false, message: err });
+                            }
+                        } else {
+                            res.json({ success: true, message: 'Order succesfully sent', transaction: transaction });
+                        }
+                    });
                 }
+
+
+
+
+
             });
+
+
         }
     });
 

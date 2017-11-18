@@ -45,6 +45,10 @@ angular.module('managementController', ['userServices', 'managementServices'])
                 if (data.data.success) {
                     if (data.data.permission === 'admin') {
                         app.cafes = data.data.cafes;
+                        if (app.cafes.length > 0)
+                            app.showCreateForm = false;
+                        else
+                            app.showCreateForm = true;
                         app.loading = false;
                     } else {
                         app.errorMsg = "Insifficient permissions.";
@@ -59,11 +63,17 @@ angular.module('managementController', ['userServices', 'managementServices'])
         }
         app.getCafes();
 
+        app.createCafeButton = function () {
+            app.showCreateForm = true;
+            app.errMsg = false;
+            app.succMsg = false;
+        }
+
         app.addCafe = function (cafeData, valid) {
             app.loading = true;
             app.errMsg = false;
             app.succMsg = false;
-
+            console.log(app.cafeData);
             if (valid) {
                 Management.create(app.cafeData)
                     .then(function (data) {
@@ -85,7 +95,6 @@ angular.module('managementController', ['userServices', 'managementServices'])
                 app.loading = false;
                 app.errMsg = "Please ensure form is filled properly";
             }
-
         }
 
     }).controller('menuCtrl', function (Management, $routeParams, $scope) {

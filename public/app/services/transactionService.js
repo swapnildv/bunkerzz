@@ -12,6 +12,7 @@ angular.module('transactionServices', [])
             //var reqData = { fromdate: new Date(), toDate: new Date() };
             return $http.put('/api/reports/transaction/', reportData);
         }
+        
 
         return transactionFactory;
 

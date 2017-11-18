@@ -58,6 +58,12 @@
             <th ng-click="sort('totalcost')">Amount (Rs.)
                 <span class="glyphicon sort-icon" ng-show="sortKey=='totalcost'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
             </th>
+            <th ng-click="sort('sgst')">SGST (Rs.)
+                <span class="glyphicon sort-icon" ng-show="sortKey=='sgst'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+            </th>
+            <th ng-click="sort('cgst')">CGST (Rs.)
+                    <span class="glyphicon sort-icon" ng-show="sortKey=='cgst'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                </th>
         </tr>
         <tr dir-paginate-start="tran in report.transactions|orderBy:sortKey:reverse|filter:search|itemsPerPage:5">
             <td>
@@ -68,6 +74,8 @@
             <td>{{$index+1}}</td>
             <td>{{tran.createdDate | date:'medium'}}</td>
             <td>{{tran.totalcost}}</td>
+            <td>{{tran.sgst}}</td>
+            <td>{{tran.cgst}}</td>
         </tr>
         <tr dir-paginate-end ng-show="tran.isCollapsed">
             <td colspan="4">

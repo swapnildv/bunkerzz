@@ -26,9 +26,17 @@ angular.module('transactionController', ['transactionServices', 'managementServi
                         app.menu = data.data.menus;
                         app.loading = false;
                         //initilise order data.
+
+
                         app.orderData.cafeid = $rootScope.loggedInUser.cafeId;
                         app.orderData.user = $rootScope.loggedInUser._id;
                         app.orderData.details = [];
+                        //get cafe details
+                        Management.getCafeById($rootScope.loggedInUser.cafeId).then(function (data) {
+                            if (data.data.success) {
+                                app.orderData.cafe = data.data.cafe;
+                            }
+                        });
 
                     } else {
                         app.errorMsg = data.data.message;
@@ -83,6 +91,7 @@ angular.module('transactionController', ['transactionServices', 'managementServi
                     if (data.data.success) {
                         debugger;
                         app.printData = angular.copy(app.orderData);
+                        app.printData.transaction = data.data.transaction;
                         app.orderData.details = [];
                         app.loading = false;
                         app.succMsg = data.data.message;
@@ -100,11 +109,11 @@ angular.module('transactionController', ['transactionServices', 'managementServi
 
 
         $scope.Print = function () {
-            console.log('print');
+            
             var printContents, popupWin;
             printContents = document.getElementById('print-section').innerHTML;
             popupWin = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');
-            popupWin.document.open();
+            //popupWin.document.open();
             popupWin.document.write(`
                   <html>
                     <head>
@@ -148,7 +157,7 @@ angular.module('transactionController', ['transactionServices', 'managementServi
                           <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" 
                           integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
                     </head>
-                <body onload="window.print();window.close();">${printContents}</body>
+                        <body onload="window.print();window.close();">${printContents}</body>
                   </html>`
             );
             popupWin.document.close();
