@@ -70,9 +70,10 @@ module.exports = function (router) {
     });
 
 
+
     router.post('/authenticate', function (req, res) {
 
-        User.findOne({ username: req.body.username }).select('username password cafeId').exec(function (err, user) {
+        User.findOne({ username: req.body.username }).select('username password cafeId permission').exec(function (err, user) {
             if (err) throw err;
             if (!user) {
                 res.send({ success: false, message: 'Could not authenticate user' });
@@ -303,6 +304,7 @@ module.exports = function (router) {
 
     router.get('/management', function (req, res) {
         User.find({}, function (err, users) {
+            
             if (err) throw err;
             User.findOne({ username: req.decoded.username }).select('permission').exec(function (err, mainUser) {
                 if (err) throw err;
@@ -320,6 +322,33 @@ module.exports = function (router) {
                     }
                 }
             });
+        });
+    });
+
+    //get users by cafeid
+    router.get('/users/:cafeid', function (req, res) {
+        User.find({ cafeId: req.params.cafeid }).select('').exec(function (err, users) {
+
+            console.log(req.decoded.username);
+            if (err) throw err;
+            User.findOne({ username: req.decoded.user.username }).select('permission').exec(function (err, mainUser) {
+                if (err) throw err;
+                if (!mainUser) {
+                    res.send({ success: false, message: 'No user found!' });
+                } else {
+                    if (mainUser.permission === 'admin') {
+                        if (!users) {
+                            res.send({ success: false, message: 'No users found!' });
+                        } else {
+                            console.log(users);
+                            res.send({ success: true, users: users });
+                        }
+                    } else {
+                        res.send({ success: false, message: 'Insifficient permissions.' });
+                    }
+                }
+            });
+
         });
     });
 
@@ -360,6 +389,58 @@ module.exports = function (router) {
             });
         }
     });
+
+    //Update cafe item
+    router.put('/cafe', function (req, res) {
+
+
+        if (req.body._id == null || req.body._id == "") {
+            res.json({ success: false, message: 'Ensure cafe details are provided!' })
+        } else {
+            User.findOne({ username: req.decoded.user.username }).select('permission').exec(function (err, mainUser) {
+                if (err) throw err;
+                if (!mainUser) {
+                    res.send({ success: false, message: 'No user found!' });
+                } else {
+                    if (mainUser.permission === 'admin') {
+                        //update menu.
+                        Cafe.findOne({ _id: req.body._id }).select().exec(function (err, cafe) {
+                            if (err) throw err;
+                            if (!cafe) {
+                                res.send({ success: false, message: 'Something went wrong!' });
+                            } else {
+
+                                //set cafe details.
+                                cafe.name = req.body.name;
+                                cafe.address = req.body.address;
+                                cafe.gst = req.body.gst;
+                                cafe.phone = req.body.phone;
+                                cafe.email = req.body.email;
+                                // menu.name = req.body.name;
+                                // menu.isActive = req.body.isActive;
+
+
+                                cafe.save(function (err) {
+                                    if (err) {
+                                        res.send({ success: false, message: err });
+                                    }
+                                    else {
+                                        res.send({ success: true, message: 'Cafe has succefully updated' });
+                                    }
+                                });
+
+                            }
+                        });
+                    } else {
+                        res.send({ success: false, message: 'Insifficient permissions.' });
+                    }
+
+                }
+            });
+        }
+
+    });
+
 
     //get list of cafe.
     router.get('/cafe', function (req, res) {
@@ -488,13 +569,6 @@ module.exports = function (router) {
                             } else {
                                 menu.name = req.body.name;
                                 menu.isActive = req.body.isActive;
-                                // if (req.body.submenus != null) {
-                                //     if (req.body.submenus.length > 0) {
-                                //         req.body.submenus.forEach(function (element) {
-                                //             menu.submenus.push(element);
-                                //         }, this);
-                                //     }
-                                // }
                                 menu.save(function (err) {
                                     if (err) {
                                         res.send({ success: false, message: err });

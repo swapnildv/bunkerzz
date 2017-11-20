@@ -26,6 +26,11 @@ angular.module('managementServices', [])
             return $http.get('/api/cafe/' + cafeid);
         }
 
+        //Management.updateCafe();
+        mgmtFactory.updateCafe = function (cafedata) {
+            return $http.put('/api/cafe/' , cafedata);
+        }
+
 
 
         //Management.updateMenuById();

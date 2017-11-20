@@ -1,4 +1,13 @@
 <form name="myForm" ng-submit="report.getTransactionReports(myForm.$valid);" novalidate>
+    <div class="row" ng-show="report.cafeList.length > 0">
+        <div class="col-md-12">
+            <select class="form-control" name="formCafeSelect" placeholder="Select cafe" ng-model="report.selectedcafe" required>
+                <option ng-repeat="ele in report.cafeList" value="{{ele._id}}">{{ele.name}}</option>
+            </select>
+            <span class="help-block" ng-show="(!myForm.formCafeSelect.$pristine && myForm.formCafeSelect.$error.required) || (myForm.$submitted && myForm.formCafeSelect.$error.required)">
+                Required!</span>
+        </div>
+    </div>
     <div class="row">
 
         <div class="col-md-4">
@@ -6,8 +15,6 @@
             <input type="date" id="fromDate" name="fromDateControl" ng-model="fromDateModel" placeholder="yyyy-MM-dd" min="2013-01-01"
                 max="{{report.maxDate}}" required />
             <div role="alert">
-
-
                 <span class="help-block" ng-show="myForm.fromDateControl.$error.required">
                     Required!</span>
                 <span class="help-block" ng-show="myForm.fromDateControl.$error.max">
@@ -62,8 +69,8 @@
                 <span class="glyphicon sort-icon" ng-show="sortKey=='sgst'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
             </th>
             <th ng-click="sort('cgst')">CGST (Rs.)
-                    <span class="glyphicon sort-icon" ng-show="sortKey=='cgst'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
-                </th>
+                <span class="glyphicon sort-icon" ng-show="sortKey=='cgst'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+            </th>
         </tr>
         <tr dir-paginate-start="tran in report.transactions|orderBy:sortKey:reverse|filter:search|itemsPerPage:5">
             <td>

@@ -63,37 +63,76 @@ angular.module('managementController', ['userServices', 'managementServices'])
         }
         app.getCafes();
 
+        app.cancelForm = function () {
+            app.showCreateForm = false;
+            app.cafeData = {};
+            app.FormMode = '';
+        }
+
         app.createCafeButton = function () {
             app.showCreateForm = true;
             app.errMsg = false;
             app.succMsg = false;
+            app.FormMode = 'create';
+        }
+
+        app.editCafeButton = function (editCafeData) {
+            app.showCreateForm = true;
+            app.cafeData = editCafeData;
+            app.FormMode = 'edit';
         }
 
         app.addCafe = function (cafeData, valid) {
             app.loading = true;
             app.errMsg = false;
             app.succMsg = false;
-            console.log(app.cafeData);
-            if (valid) {
-                Management.create(app.cafeData)
-                    .then(function (data) {
-                        app.loading = false;
-                        if (data.data.success) {
-                            app.succMsg = data.data.message;
-                            app.getCafes();
-                            app.showCreateForm = false;
-                            app.cafeData = {};
-                            $scope.cafeForm.$setPristine();
-                        }
-                        else {
-                            //Create error message
-                            app.errMsg = data.data.message;
+            if (app.FormMode == 'create') {
 
-                        }
-                    });
-            } else {
-                app.loading = false;
-                app.errMsg = "Please ensure form is filled properly";
+                if (valid) {
+                    Management.create(app.cafeData)
+                        .then(function (data) {
+                            app.loading = false;
+                            if (data.data.success) {
+                                app.succMsg = data.data.message;
+                                app.getCafes();
+                                app.showCreateForm = false;
+                                app.cafeData = {};
+                                $scope.cafeForm.$setPristine();
+                            }
+                            else {
+                                //Create error message
+                                app.errMsg = data.data.message;
+
+                            }
+                        });
+                } else {
+                    app.loading = false;
+                    app.errMsg = "Please ensure form is filled properly";
+                }
+            }
+            else if (app.FormMode == 'edit') {
+
+                if (valid) {
+                    Management.updateCafe(app.cafeData)
+                        .then(function (data) {
+                            app.loading = false;
+                            if (data.data.success) {
+                                app.succMsg = data.data.message;
+                                app.getCafes();
+                                app.showCreateForm = false;
+                                app.cafeData = {};
+                                $scope.cafeForm.$setPristine();
+                            }
+                            else {
+                                //Create error message
+                                app.errMsg = data.data.message;
+
+                            }
+                        });
+                } else {
+                    app.loading = false;
+                    app.errMsg = "Please ensure form is filled properly";
+                }
             }
         }
 

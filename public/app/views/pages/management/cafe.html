@@ -7,18 +7,24 @@
         <table class="table">
             <tr>
                 <th>Name</th>
-                <th>address</th>|
+                <th>address</th>
+                <th colspan="2"></th>
             </tr>
-            <tr ng-repeat="cafe in cafe.cafes">
-                <td>{{cafe.name}}</td>
-                <td>{{cafe.address.address1}} {{cafe.address.address2}} {{cafe.address.address3}}</td>
+            <tr ng-repeat="cafeItem in cafe.cafes">
+                <td>{{cafeItem.name}}</td>
+                <td>{{cafeItem.address.address1}} {{cafeItem.address.address2}} {{cafeItem.address.address3}}</td>
                 <td>
-                    <a href="/menu/{{cafe._id}}">
+                    <a href="/menu/{{cafeItem._id}}">
                         <button type="button" class="btn btn-primary">Menu</button>
                     </a>
-                    <!-- <a href="#">
-                    <button type="button" class="btn btn-danger">Delete</button>
-                </a> -->
+                </td>
+                <td>
+                    <button type="button" class="btn btn-primary" ng-click="cafe.editCafeButton(cafeItem)">Edit</button>
+                </td>
+                <td>
+                    <a href="/users/{{cafeItem._id}}">
+                        <button type="button" class="btn btn-primary">Users</button>
+                    </a>
                 </td>
             </tr>
         </table>
@@ -31,21 +37,19 @@
 
 
         <div class="page-header">
-            <h1>Create Cafe</h1>
+            <h1>{{cafe.FormMode == 'create' ? "Add Cafe" : "Edit Cafe"}}</h1>
         </div>
         <form name="cafeForm" ng-submit="cafe.addCafe(cafeData,cafeForm.$valid);" novalidate>
             <label>Name :</label>
             <div class="row">
-                <div  class="col-md-4" ng-class="{'has-success':(cafeForm.name.$valid && !cafeForm.name.$pristine),'has-error':(!cafeForm.name.$valid && !cafeForm.name.$pristine) || (!cafeForm.name.$valid && cafeForm.$submitted)}">
-
-                    <input class="form-control" type="text" name="name" placeholder="Please enter name" ng-model="cafe.cafeData.name" ng-pattern="/^[a-zA-Z\ ]+$/i"
-                        ng-minlength="3" ng-maxlength="20" required>
+                <div class="col-md-4" ng-class="{'has-success':(cafeForm.name.$valid && !cafeForm.name.$pristine),'has-error':(!cafeForm.name.$valid && !cafeForm.name.$pristine) || (!cafeForm.name.$valid && cafeForm.$submitted)}">
+                    <input class="form-control" type="text" name="name" placeholder="Please enter name" ng-model="cafe.cafeData.name" required>
                     <p class="help-block" ng-show="(!cafeForm.name.$pristine && cafeForm.name.$error.required) || (cafeForm.$submitted && cafeForm.name.$error.required)">This field is required</p>
-                    <ul class="help-block" ng-show="(!cafeForm.name.$pristine && cafeForm.name.$error.pattern) || (!cafeForm.name.$pristine &&  cafeForm.name.$error.minlength) || (!cafeForm.name.$pristine &&  cafeForm.name.$error.maxlength)">
+                    <!-- <ul class="help-block" ng-show="(!cafeForm.name.$pristine && cafeForm.name.$error.pattern) || (!cafeForm.name.$pristine &&  cafeForm.name.$error.minlength) || (!cafeForm.name.$pristine &&  cafeForm.name.$error.maxlength)">
                         <li>No special characters are allowed in Name field.</li>
                         <li>Must not contain any numbers.</li>
                         <li>Must be atleast 3 chracters but no more than 20.</li>
-                    </ul>
+                    </ul> -->
                 </div>
             </div>
             <br>
@@ -113,7 +117,7 @@
             <br>
 
             <button class="btn btn-primary" type="submit">Submit</button>
-            <button class="btn btn-primary" type="button" ng-click="cafe.showCreateForm = false">Cancel</button>
+            <button class="btn btn-primary" type="button" ng-click="cafe.cancelForm()">Cancel</button>
         </form>
     </div>
 

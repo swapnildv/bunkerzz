@@ -109,7 +109,7 @@ angular.module('transactionController', ['transactionServices', 'managementServi
 
 
         $scope.Print = function () {
-            
+
             var printContents, popupWin;
             printContents = document.getElementById('print-section').innerHTML;
             popupWin = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');
@@ -170,13 +170,14 @@ angular.module('transactionController', ['transactionServices', 'managementServi
             }
             return total
         }
-    }).controller('reportCtrl', function (TransactionService, $rootScope, $scope) {
+    }).controller('reportCtrl', function (TransactionService, Management, $rootScope, $scope) {
         //console.log(reportCtrl);
         var app = this;
         app.loading = false;
         app.errMsg = false;
         app.succMsg = false;
         app.maxDate = new Date();
+        app.selectedcafe = '';
         $scope.fromDateModel = new Date();
         $scope.toDateModel = new Date();
         //watch on fromDate.
@@ -201,7 +202,7 @@ angular.module('transactionController', ['transactionServices', 'managementServi
                 app.succMsg = false;
                 app.loading = true;
 
-                var reportData = { cafeid: $rootScope.loggedInUser.cafeId, fromdate: $scope.fromDateModel, todate: $scope.toDateModel };
+                var reportData = { cafeid: app.selectedcafe, fromdate: $scope.fromDateModel, todate: $scope.toDateModel };
                 reportData.fromdate = new Date(reportData.fromdate.setHours(0, 0, 0));
                 reportData.todate = new Date(reportData.todate.setHours(23, 59, 59));
 
@@ -223,7 +224,7 @@ angular.module('transactionController', ['transactionServices', 'managementServi
             }
             else {
                 app.loading = false;
-                app.errMsg = "Please ensure dates are valid!";
+                app.errMsg = "Please ensure required data is valid!";
                 app.transactions = [];
             }
         }
@@ -233,7 +234,35 @@ angular.module('transactionController', ['transactionServices', 'managementServi
             $scope.reverse = !$scope.reverse; //if true make it false and vice versa
         }
 
-        //Printing
+        app.loadReport = function () {
+            //check user role 
+            if ($rootScope.loggedInUser) {
+                if ($rootScope.loggedInUser.permission === 'admin') {
+                    //get cafe list.
+                    app.errMsg = false;
+                    app.succMsg = false;
+                    app.loading = true;
+                    Management.getCafes().then(function (data) {
+                        if (data.data.success) {
+                            debugger;
+                            app.cafeList = data.data.cafes;
+                            app.loading = false;
+                        } else {
+                            app.errorMsg = data.data.message;
+                            app.loading = false;
+                        }
+                    });
+                } else {
+                    if ($rootScope.loggedInUser.cafeId) {
+                        app.selectedcafe = $rootScope.loggedInUser.cafeId;
+                    }
+                }
+            }
 
+
+
+        }
+
+        app.loadReport();
 
     });

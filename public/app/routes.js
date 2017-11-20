@@ -12,7 +12,7 @@ var app = angular.module('appRoutes', ['ngRoute']).
             .when('/about', {
                 templateUrl: 'app/views/pages/about.html'
             })
-            .when('/register', {
+            .when('/users/:cafeid', {
                 templateUrl: 'app/views/pages/users/register.html',
                 controller: 'regCtrl',
                 controllerAs: 'register',
