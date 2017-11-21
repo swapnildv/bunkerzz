@@ -1,8 +1,9 @@
 angular.module('userController', ['userServices'])
-    .controller('regCtrl', function ($http, $location, $timeout, User, $routeParams) {
+    .controller('regCtrl', function ($http, $location, $timeout, User, $routeParams,$scope) {
 
         var app = this;
         this.showCreateForm = false;
+        app.roles = ['user', 'moderator'];
         //get cafe wise users.
         app.getUsersByCafeId = function () {
             if ($routeParams.cafeid) {
@@ -24,16 +25,30 @@ angular.module('userController', ['userServices'])
         app.getUsersByCafeId();
 
         this.regUser = function (regData, valid) {
+
             app.loading = true;
             app.errMsg = false;
             app.succMsg = false;
+            //set cafeid.
+            if ($routeParams.cafeid) {
+                app.regData.cafeid = $routeParams.cafeid;
+            }
+            console.log(app.regData);
             if (valid) {
                 User.create(app.regData)
                     .then(function (data) {
+                        debugger;
                         app.loading = false;
                         if (data.data.success) {
-                            app.succMsg = data.data.message + "...Redirecting";
-                            this.showCreateForm = false;
+                            debugger;
+                            app.succMsg = data.data.message;
+
+                            app.regData = {};
+                            $scope.regForm.$setPristine();
+                            $scope.confirm = '';
+                            $scope.firstpassword = '';
+                            app.getUsersByCafeId();
+                            app.showCreateForm = false;
                             // $timeout(function () {
                             //     $location.path('/');
                             // }, 2000);
@@ -50,8 +65,12 @@ angular.module('userController', ['userServices'])
             }
         }
 
-        app.createCafeButton = function () {
+        app.createUserButton = function () {
             this.showCreateForm = true;
+        }
+
+        app.cancelCreate = function () {
+            this.showCreateForm = false;
         }
 
 

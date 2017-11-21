@@ -47,8 +47,10 @@ angular.module('managementController', ['userServices', 'managementServices'])
                         app.cafes = data.data.cafes;
                         if (app.cafes.length > 0)
                             app.showCreateForm = false;
-                        else
+                        else {
                             app.showCreateForm = true;
+                            app.FormMode = 'create';
+                        }
                         app.loading = false;
                     } else {
                         app.errorMsg = "Insifficient permissions.";

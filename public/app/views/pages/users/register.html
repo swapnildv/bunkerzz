@@ -24,7 +24,7 @@
                     <td class="col-md-3">
                         <!-- <select class="form-control" ng-if="menuItem.menuEditMode" ng-options="ele for ele in menu.isActiveOptions" ng-model="menuItem.isActive">
                 </select> -->
-                        <span>{{menuItem.permission}}</span>
+                        <span>{{userItem.permission}}</span>
                     </td>
                     <!-- <td class="col-md-3">
                 <button type="button" ng-show="!menuItem.menuEditMode" ng-click="menu.menuEdit(menuItem)" class="btn btn-warning">Edit</button>
@@ -38,7 +38,7 @@
     <br>
     <button ng-show="!register.showCreateForm" class="btn btn-primary" type="button" ng-click="register.createUserButton();">Create New</button>
     <br>
-    <form  ng-show="register.showCreateForm" name="regForm" ng-submit="register.regUser(regData,regForm.$valid);" novalidate>
+    <form ng-show="register.showCreateForm" name="regForm" ng-submit="register.regUser(regData,regForm.$valid);" novalidate>
 
         <div ng-class="{'has-success':(regForm.name.$valid && !regForm.name.$pristine),'has-error':(!regForm.name.$valid && !regForm.name.$pristine) || (!regForm.name.$valid && regForm.$submitted)}">
             <label>Name :</label>
@@ -80,6 +80,21 @@
         </div>
         <br>
 
+        <div ng-class="{'has-success':(regForm.firstpassword.$valid && !regForm.firstpassword.$pristine),'has-error':(!regForm.firstpassword.$valid && !regForm.firstpassword.$pristine) || (!regForm.firstpassword.$valid && regForm.$submitted)}">
+            <label>Role :</label>
+            <select class="form-control" ng-options="ele for ele in register.roles" ng-model="register.regData.permission">
+            </select>
+            <!-- <p class="help-block" ng-show="(!regForm.firstpassword.$pristine && regForm.firstpassword.$error.required) || (regForm.$submitted && regForm.firstpassword.$error.required)">This field is required</p>
+            <ul class="help-block" ng-show="(!regForm.firstpassword.$pristine && regForm.firstpassword.$error.pattern) || (!regForm.firstpassword.$pristine &&  regForm.firstpassword.$error.minlength) || (!regForm.firstpassword.$pristine &&  regForm.firstpassword.$error.maxlength)">
+                <li>Must contain atleast one lowercase letter </li>
+                <li>Must contain atleast one Uppercase letter </li>
+                <li>Must contain atleast one number and one special character</li>
+                <li>must be at least 8 character long but no more than 35.</li>
+            </ul> -->
+        </div>
+
+        <br>
+
         <!--Password -->
         <div ng-class="{'has-success':(regForm.firstpassword.$valid && !regForm.firstpassword.$pristine),'has-error':(!regForm.firstpassword.$valid && !regForm.firstpassword.$pristine) || (!regForm.firstpassword.$valid && regForm.$submitted)}">
             <label>Password :</label>
@@ -109,17 +124,15 @@
         <br>
 
 
-        <button class="btn btn-primary" type="submit">Registration</button>
+        <button class="btn btn-primary" type="submit">Submit</button>
+        <button class="btn btn-primary" type="button" ng-click="register.cancelCreate()">Cancel</button>
 
     </form>
 
     <br>
-    <div class="jumbotron text-center" ng-show="register.loading">
-        <h4>
-            <span class="glyphicon glyphicon-repeat spinner">
-                Loading....
-            </span>
-        </h4>
+    <div class="text-center" ng-show="register.loading">
+        <div class="spinner">
+        </div>
     </div>
     <br>
     <div class="row show-hide-message" ng-show="register.succMsg">

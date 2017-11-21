@@ -30,6 +30,9 @@ module.exports = function (router) {
         user.password = req.body.password;
         user.name = req.body.name;
         user.email = req.body.email;
+        user.permission = req.body.permission;
+        user.cafeId = req.body.cafeid;
+
         if (req.body.username == null || req.body.username == "" || req.body.password == null || req.body.password == "" ||
             req.body.name == null || req.body.name == "" || req.body.email == null || req.body.email == "") {
             res.json({ success: false, message: 'Ensure username ,email,name and password were provided' })
@@ -329,7 +332,7 @@ module.exports = function (router) {
     router.get('/users/:cafeid', function (req, res) {
         User.find({ cafeId: req.params.cafeid }).select('').exec(function (err, users) {
 
-            console.log(req.decoded.username);
+            //console.log(req.decoded.username);
             if (err) throw err;
             User.findOne({ username: req.decoded.user.username }).select('permission').exec(function (err, mainUser) {
                 if (err) throw err;
@@ -340,7 +343,7 @@ module.exports = function (router) {
                         if (!users) {
                             res.send({ success: false, message: 'No users found!' });
                         } else {
-                            console.log(users);
+                            //console.log(users);
                             res.send({ success: true, users: users });
                         }
                     } else {
