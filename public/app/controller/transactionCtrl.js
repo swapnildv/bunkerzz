@@ -89,7 +89,6 @@ angular.module('transactionController', ['transactionServices', 'managementServi
                 app.succMsg = false;
                 TransactionService.placeOrder(app.orderData).then(function (data) {
                     if (data.data.success) {
-                        debugger;
                         app.printData = angular.copy(app.orderData);
                         app.printData.transaction = data.data.transaction;
                         app.orderData.details = [];
@@ -244,7 +243,6 @@ angular.module('transactionController', ['transactionServices', 'managementServi
                     app.loading = true;
                     Management.getCafes().then(function (data) {
                         if (data.data.success) {
-                            debugger;
                             app.cafeList = data.data.cafes;
                             app.loading = false;
                         } else {

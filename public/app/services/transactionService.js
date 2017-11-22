@@ -13,7 +13,6 @@ angular.module('transactionServices', [])
             return $http.put('/api/reports/transaction/', reportData);
         }
         
-
         return transactionFactory;
 
     });

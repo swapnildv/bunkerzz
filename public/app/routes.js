@@ -16,7 +16,8 @@ var app = angular.module('appRoutes', ['ngRoute']).
                 templateUrl: 'app/views/pages/users/register.html',
                 controller: 'regCtrl',
                 controllerAs: 'register',
-                authenticated: false
+                authenticated: false,
+                activetab: 'cafe'
             })
             .when('/login', {
                 templateUrl: 'app/views/pages/users/login.html',
@@ -34,39 +35,38 @@ var app = angular.module('appRoutes', ['ngRoute']).
                 controllerAs: 'reset',
                 authenticated: false
             })
-            .when('/management', {
-                templateUrl: 'app/views/pages/management/management.html',
-                controller: 'managementCtrl',
-                controllerAs: 'management',
-                authenticated: true,
-                permission: ['admin', 'moderator']
-            })
             .when('/cafe', {
                 templateUrl: 'app/views/pages/management/cafe.html',
                 controller: 'cafeCtrl',
                 controllerAs: 'cafe',
                 authenticated: true,
-                permission: ['admin']
+                permission: ['admin'],
+                activetab: 'cafe'
             })
             .when('/menu/:cafeid', {
                 templateUrl: 'app/views/pages/management/menu.html',
                 controller: 'menuCtrl',
                 controllerAs: 'menu',
                 authenticated: true,
-                permission: ['admin', 'moderator']
+                permission: ['admin', 'moderator'],
+                activetab: 'cafe'
             })
             .when('/order', {
                 templateUrl: 'app/views/pages/transaction/order.html',
                 controller: 'transactionCtrl',
                 controllerAs: 'transaction',
-                authenticated: false
+                authenticated: false,
+                activetab: 'order'
+                
             })
             .when('/reports/transactions', {
                 templateUrl: 'app/views/pages/transaction/report.html',
                 controller: 'reportCtrl',
                 controllerAs: 'report',
                 authenticated: true,
-                permission: ['admin', 'moderator']
+                permission: ['admin', 'moderator'],
+                activetab: 'report'
+                
             })
             .when('/logout', {
                 templateUrl: 'app/views/pages/users/logout.html',

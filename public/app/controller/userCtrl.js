@@ -37,10 +37,8 @@ angular.module('userController', ['userServices'])
             if (valid) {
                 User.create(app.regData)
                     .then(function (data) {
-                        debugger;
                         app.loading = false;
                         if (data.data.success) {
-                            debugger;
                             app.succMsg = data.data.message;
 
                             app.regData = {};

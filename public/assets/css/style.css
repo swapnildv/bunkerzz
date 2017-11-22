@@ -1,5 +1,10 @@
 
-
+body {
+	color: #566787;
+	background: #f5f5f5;
+	font-family: 'Varela Round', sans-serif;
+	font-size: 13px;
+}
 main {
 	padding-top:30px;	
 }
@@ -74,9 +79,6 @@ header .navbar 		{
 	float: right;
 }
 
-.headerRow{
-	margin-bottom: 15px;
-}
 
 /*
 order.html	
@@ -100,3 +102,188 @@ report.html
 th {
     cursor:pointer;
 }
+
+/*Login*/
+
+.login-form{
+	width: 350px;
+	margin: 0 auto;
+	padding: 30px 0;
+}
+
+.login-form form {
+	color: #434343;
+	border-radius: 1px;
+	margin-bottom: 15px;
+	background: #fff;
+	border: 1px solid #f3f3f3;
+	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+	padding: 30px;
+}
+
+.login-form h4 {
+	text-align: center;
+	font-size: 22px;
+	margin-bottom: 20px;
+}
+
+.login-form .avatar {
+	color: #fff;
+	margin: 0 auto 30px;
+	text-align: center;
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	z-index: 9;
+	background: #4aba70;
+	padding: 15px;
+	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.login-form .avatar span{
+	font-size: 60px;
+}
+.login-form .form-group {
+	margin-bottom: 20px;
+}
+
+.login-form .form-control, .login-form .btn {
+	min-height: 40px;
+	border-radius: 2px; 
+	transition: all 0.5s;
+}
+
+.login-form .btn {
+	background: #4aba70;
+	border: none;
+	line-height: normal;
+}
+
+.login-form .btn:hover, .login-form .btn:focus {
+	background: #42ae68;
+}
+
+.login-form .forgot-link {
+	float: right;
+}
+
+.login-form a {
+	color: #4aba70;
+}
+
+.login-form .small {
+	font-size: 15px;
+}
+
+/*transaction.*/
+
+.table-wrapper {
+	background: #fff;
+	padding: 20px 25px;
+	margin: 30px 0;
+	border-radius: 3px;
+	box-shadow: 0 1px 1px rgba(0,0,0,.05);
+}
+
+.table-title {        
+	padding-bottom: 15px;
+	background: #052635;
+	color: #fff;
+	padding: 16px 30px;
+	margin: -20px -25px 10px;
+	border-radius: 3px 3px 0 0;
+}
+.table-footer{
+	padding-bottom: 10px;
+	background: #052635;
+	color: #fff;
+	padding: 16px 30px;
+	margin: 0px -25px 10px;
+	border-radius: 3px 3px 0 0;
+}
+
+.table-footer .btn {
+	color: #fff;
+	font-size: 13px;
+	border: none;
+	min-width: 50px;
+	border-radius: 2px;
+	border: none;
+	outline: none !important;
+	margin-left: 10px;
+}
+
+.table-footer .btn .btn-gly {
+	float: left;
+	font-size: 21px;
+	margin-right: 5px;
+}
+
+.table-footer .btn span {
+	float: left;
+	margin-top: 2px;
+	font-size: 15px;
+	color: black;
+	font-weight: bold;
+}
+
+.table-title h2 {
+	margin: 5px 0 0;
+	font-size: 24px;
+}
+
+.table-title .btn-group {
+	float: right;
+}
+
+.table-title .btn {
+	color: #fff;
+	float: right;
+	font-size: 13px;
+	border: none;
+	min-width: 50px;
+	border-radius: 2px;
+	border: none;
+	outline: none !important;
+	margin-left: 10px;
+}
+
+.table-title .btn .btn-gly {
+	float: left;
+	font-size: 21px;
+	margin-right: 5px;
+}
+
+.table-title .btn span {
+	float: left;
+	margin-top: 2px;
+	font-size: 15px;
+}
+
+.table-title .label h1 {
+	margin: 5px 0 0;
+	
+}
+.table-title .total {
+	font-size: 30px;
+	
+}
+
+.table-title .total .badge {
+	padding: 5x 12x;
+	font-size: 30px;
+	background-color: #1aa732
+}
+
+.order-table .list-group-item{
+	font-size: 20px;
+}
+
+.order-table .badge {
+	font-size: 18px;
+}
+
+
+
+
+

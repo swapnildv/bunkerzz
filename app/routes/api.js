@@ -2,6 +2,7 @@
 var User = require('../models/user');
 var Cafe = require('../models/cafe');
 var Menu = require('../models/menu');
+var Test = require('../models/test');
 var Transaction = require('../models/transaction');
 
 
@@ -72,6 +73,35 @@ module.exports = function (router) {
 
     });
 
+    router.post('/testpost', function (req, res) {
+        var test = new Test();
+        test.name = req.body.name;
+        test.raceevntid = req.body.raceevntid;
+
+        test.save(function (err) {
+            if (err) {
+                res.send({ success: false, message: err });
+            }
+            else {
+                res.send({ success: true, test: test });
+            }
+        })
+
+    });
+
+    router.get('/testpost', function (req, res) {
+        Test.find({}, function (err, tests) {
+
+            if (err) console.log(err);
+
+            if (!tests) {
+                res.send({ success: false, message: 'Races not found!' });
+            } else {
+                res.send({ success: true, tests: tests });
+            }
+
+        });
+    });
 
 
     router.post('/authenticate', function (req, res) {
@@ -93,7 +123,7 @@ module.exports = function (router) {
                 }
                 else {
                     var _token = jwt.sign({ user: user }, secret, { expiresIn: '24h' });
-                    res.send({ success: true, message: 'User authenticated!', token: _token });
+                    res.send({ success: true, message: 'User authenticated!', token: _token, user: user });
                 }
             }
         });
@@ -307,7 +337,7 @@ module.exports = function (router) {
 
     router.get('/management', function (req, res) {
         User.find({}, function (err, users) {
-            
+
             if (err) throw err;
             User.findOne({ username: req.decoded.username }).select('permission').exec(function (err, mainUser) {
                 if (err) throw err;
