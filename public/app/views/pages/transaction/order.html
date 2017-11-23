@@ -23,22 +23,22 @@
                 </div>
             </div>
         </div>
+        <form name="panelForm">
+            <div class="row order-table">
+                <div class="col-md-4">
+                    <div class="list-group">
+                        <button type="button" ng-repeat="menu in transaction.menu" ng-click="transaction.changeMenu(menu);" class="list-group-item">{{menu.name}}</button>
 
-        <div class="row order-table">
-            <div class="col-md-4">
-                <div class="list-group">
-                    <button type="button" ng-repeat="menu in transaction.menu" ng-click="transaction.changeMenu(menu);" class="list-group-item">{{menu.name}}</button>
-
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <button type="button" ng-repeat="submenu in transaction.selectedMenu.submenus" ng-click="transaction.addToCart(submenu)"
-                    class="list-group-item">{{submenu.name}}
-                    <span class="label label-default">Rs.{{submenu.price}}</span>
-                </button>
-            </div>
-            <div class="col-md-4">
-                <form name="panelForm">
+                <div class="col-md-4">
+                    <button type="button" ng-repeat="submenu in transaction.selectedMenu.submenus" ng-click="transaction.addToCart(submenu)"
+                        class="list-group-item">{{submenu.name}}
+                        <span class="label label-default">Rs.{{submenu.price}}</span>
+                    </button>
+                </div>
+                <div class="col-md-4">
+
                     <div class="panel panel-default" ng-repeat="panel in transaction.orderData.details">
                         <div class="panel-heading">
                             <div class="row">
@@ -70,25 +70,28 @@
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
-        </div>
-        <div class="table-footer">
-            <div class="row">
-                <div class="col-sm-7">
-                    <button class="btn btn-warning" ng-click="Print();" ng-show="transaction.printData">
-                        <span class="glyphicon glyphicon-print btn-gly" aria-hidden="true"></span>
-                        <span> Print </span>
-                    </button>
-                    <!-- <button type="button" ng-click="Print()">Print</button> -->
-                </div>
-                <div class="col-sm-5">
 
                 </div>
-
             </div>
-        </div>
+            <div class="table-footer">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <button class="btn btn-warning" ng-click="Print();" ng-show="transaction.printData">
+                            <span class="glyphicon glyphicon-print btn-gly" aria-hidden="true"></span>
+                            <span> Print </span>
+                        </button>
+                        <!-- <button type="button" ng-click="Print()">Print</button> -->
+                    </div>
+                    <div class="col-sm-4">
+                        <input class="form-control" type="text" name="customername" placeholder="Customer" ng-model="transaction.orderData.customername">
+                    </div>
+                    <div class="col-sm-4">
+                        <input class="form-control" type="number" name="customerphone" placeholder="Mobile No." ng-model="transaction.orderData.customerphone">
+                    </div>
 
+                </div>
+            </div>
+        </form>
 
     </div>
     <div class="text-center" ng-show="transaction.loading">
@@ -106,15 +109,21 @@
     </div>
 </div>
 <!--Printing-->
-<div id="print-section" style="visibility: hidden;">
+<div id="print-section" class="print-section" style="visibility: hidden;">
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default" style="margin-bottom: -2px;">
                 <div class="panel-heading betSummaryHeader text-center">
                     <strong>
-                        <span>{{transaction.printData.cafe.name}}</span>
+                        <span class="cafeHeader">{{transaction.printData.cafe.name}}</span>
                     </strong>
-                    <table align="center" class="text-center">
+                    <br>
+                    <span class="address">{{transaction.printData.cafe.address.address1}}</span>
+                    <br>
+                    <span class="address">{{transaction.printData.cafe.address.address2}}</span>
+                    <br>
+                    <span class="address">Mo : {{transaction.printData.cafe.phone}}</span>
+                    <!-- <table align="center" class="text-center">
                         <tr>
                             <td>{{transaction.printData.cafe.address.address1}}</td>
                         </tr>
@@ -124,7 +133,7 @@
                         <tr>
                             <td>Mo : {{transaction.printData.cafe.phone}}</td>
                         </tr>
-                    </table>
+                    </table> -->
                 </div>
                 <!-- <div class="panel-heading betSummaryHeader visible-print text-center"> 
                     <span> sample  </span>
@@ -136,7 +145,12 @@
                     <div class="row">
                         <div class="col-md-12">
                             # : {{transaction.printData.transaction._id}}
-                            <span class="pull-right">{{app.printData.transaction._id}}</span>
+                            <!-- <span class="pull-right">{{app.printData.transaction._id}}</span> -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{transaction.printData.transaction.createdDate | date:'medium'}}
                         </div>
                     </div>
                     <!-- <div class="row">

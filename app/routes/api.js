@@ -714,6 +714,8 @@ module.exports = function (router) {
                     transaction.cafeid = req.body.cafeid;
                     transaction.createdDate = new Date();
                     transaction.totalcost = req.body.totalcost;
+                    transaction.customername = req.body.customername;
+                    transaction.customerphone = req.body.customerphone;
                     transaction.sgst = ((cafe.gst.sgst / 100) * req.body.totalcost);
                     transaction.cgst = ((cafe.gst.cgst / 100) * req.body.totalcost);
 

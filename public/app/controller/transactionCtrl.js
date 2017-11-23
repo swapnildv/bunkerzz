@@ -92,6 +92,8 @@ angular.module('transactionController', ['transactionServices', 'managementServi
                         app.printData = angular.copy(app.orderData);
                         app.printData.transaction = data.data.transaction;
                         app.orderData.details = [];
+                        app.orderData.customername = '';
+                        app.orderData.customerphone = '';
                         app.loading = false;
                         app.succMsg = data.data.message;
                     } else {
@@ -194,6 +196,18 @@ angular.module('transactionController', ['transactionServices', 'managementServi
                 $scope.myForm.fromDateControl.$setValidity("endBeforeStart", toDate >= fromDate);
             }
         }
+        function calcTotal() {
+            $scope.total = 0;
+            $scope.totalcgst = 0
+            $scope.totalsgst = 0;
+
+            app.transactions.forEach(element => {
+                $scope.total += element.totalcost;
+                $scope.totalcgst += element.cgst;
+                $scope.totalsgst += element.sgst;
+            });
+
+        }
 
         app.getTransactionReports = function (isValid) {
             if (isValid) {
@@ -212,6 +226,7 @@ angular.module('transactionController', ['transactionServices', 'managementServi
                     TransactionService.getTransactionReport(reportData).then(function (data) {
                         if (data.data.success) {
                             app.transactions = data.data.transactions;
+                            calcTotal();
                             app.loading = false;
 
                         } else {

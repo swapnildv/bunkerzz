@@ -16,7 +16,9 @@ var Transaction = new Schema({
     createdDate: { type: Date, required: false },
     details: { type: [TransactionDetail], required: true },
     sgst: { type: Number, required: true },
-    cgst: { type: Number, required: true }
+    cgst: { type: Number, required: true },
+    customername: { type: String },
+    customerphone: { type: Number }
 });
 
 module.exports = mongoose.model('Transaction', Transaction);
