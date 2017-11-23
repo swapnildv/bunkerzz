@@ -5,6 +5,7 @@ body {
 	font-family: 'Varela Round', sans-serif;
 	font-size: 13px;
 }
+
 main {
 	padding-top:30px;	
 }
@@ -131,14 +132,28 @@ th {
 	color: #fff;
 	margin: 0 auto 30px;
 	text-align: center;
-	width: 100px;
-	height: 100px;
+	
 	border-radius: 50%;
 	z-index: 9;
-	background: #4aba70;
+	
 	padding: 15px;
 	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
 }
+
+
+.login-form .avatar img{
+	width: 109px;
+    height: 127px;
+    margin: 10px;
+    border: 2px solid #1f1e1e;
+    border-radius: 500px;
+	-webkit-border-radius: 500px;
+	-moz-border-radius: 500px;
+}
+
+
+
+
 
 .login-form .avatar span{
 	font-size: 60px;
