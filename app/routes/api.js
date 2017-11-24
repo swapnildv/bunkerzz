@@ -204,9 +204,9 @@ module.exports = function (router) {
                                 to: user.email, // list of receivers
                                 subject: 'Bunkerzz Reset Password Request', // Subject line
                                 text: 'Hello ' + user.username + ', You recently requested a password reset link.Please click on the link below to reset your password : ' +
-                                '<br><br><a href="http://localhost:8080/reset/' + user.resettoken + '">http://localhost:8080/reset/</a>',
+                                '<br><br><a href="https://shrouded-oasis-45996.herokuapp.com/reset/' + user.resettoken + '">https://shrouded-oasis-45996.herokuapp.com/reset/</a>',
                                 html: 'Hello <strong>' + user.username + '</strong>,<br><br>You recently requested a password reset link.Please click on the link below to reset your password : ' +
-                                '<br><br><a href="http://localhost:8080/reset/' + user.resettoken + '">http://localhost:8080/reset/</a>'
+                                '<br><br><a href="https://shrouded-oasis-45996.herokuapp.com/reset/' + user.resettoken + '">https://shrouded-oasis-45996.herokuapp.com/reset/</a>'
                             };
                             console.log('email sent');
                             transporter.sendMail(mailOptions, function (err, info) {
