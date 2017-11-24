@@ -53,6 +53,8 @@ angular.module('transactionController', ['transactionServices', 'managementServi
 
         app.addToCart = function (submenu) {
             app.orderData.details.push({ qty: 1, cost: submenu.price, submenu_id: submenu._id, submenu: submenu.name, submenu_price: submenu.price });
+            $scope.Menusearch = '';
+            $scope.Submenusearch = '';
         }
 
         app.removeFromCart = function (panel) {

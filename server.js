@@ -55,14 +55,14 @@ mongoose.connect('mongodb://swapnil:swapnil@52.15.136.147/bunkerzz', function (e
 // });
 
 //local
-mongoose.connect('mongodb://localhost:27017/bunkerzz', function (err) {
-    if (err) {
-        console.log('not connected to DB:' + err);
-    }
-    else {
-        console.log('connected to DB successfully.');
-    }
-});
+// mongoose.connect('mongodb://localhost:27017/bunkerzz', function (err) {
+//     if (err) {
+//         console.log('not connected to DB:' + err);
+//     }
+//     else {
+//         console.log('connected to DB successfully.');
+//     }
+// });
 
 app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname + '/public/app/views/index.html'));

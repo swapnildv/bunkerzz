@@ -22,18 +22,41 @@
                     </button>
                 </div>
             </div>
+
+        </div>
+        <div class="search-title">
+            <div class="row">
+                <div class="col-sm-5">
+                    <form>
+                        <div class="form-group">
+                            <input type="text" ng-model="Menusearch" class="form-control" placeholder="Search By Menu">
+                        </div>
+                    </form>
+                
+                </div>
+                <div class="col-sm-2"></div>
+                <div class="col-sm-5">
+                    <form>
+                        <div class="form-group">
+                            <input type="text" ng-model="Submenusearch" class="form-control" placeholder="Search By Submenu">
+                        </div>
+                    </form>
+                </div>
+               
+            </div>
         </div>
         <form name="panelForm">
             <div class="row order-table">
                 <div class="col-md-4">
                     <div class="list-group">
-                        <button type="button" ng-repeat="menu in transaction.menu" ng-click="transaction.changeMenu(menu);" class="list-group-item">{{menu.name}}</button>
+                        <button type="button" ng-class="{active:transaction.selectedMenu == menu}" ng-repeat="menu in transaction.menu  | filter:Menusearch" ng-click="transaction.changeMenu(menu);"
+                            class="list-group-item">{{menu.name}}</button>
 
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <button type="button" ng-repeat="submenu in transaction.selectedMenu.submenus" ng-click="transaction.addToCart(submenu)"
-                        class="list-group-item">{{submenu.name}}
+                    <button type="button" ng-repeat="submenu in transaction.selectedMenu.submenus | filter:Submenusearch" ng-click="transaction.addToCart(submenu)"
+                        class="list-group-item submenu-group">{{submenu.name}}
                         <span class="label label-default">Rs.{{submenu.price}}</span>
                     </button>
                 </div>

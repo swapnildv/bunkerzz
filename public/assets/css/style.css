@@ -309,3 +309,20 @@ th {
 }
 
 
+.search-title {        
+	padding-bottom: 15px;
+    background: #4d7d92;
+    color: #fff;
+    padding: 16px 30px;
+    margin: -6px -25px 12px;
+    border-radius: 3px 3px 0 0;
+}
+
+.list-group-item {
+	border-color: black;
+}
+
+.panel-default {
+	border-color: black;
+}
+
