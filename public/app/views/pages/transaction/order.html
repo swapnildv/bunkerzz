@@ -32,7 +32,7 @@
                             <input type="text" ng-model="Menusearch" class="form-control" placeholder="Search By Menu">
                         </div>
                     </form>
-                
+
                 </div>
                 <div class="col-sm-2"></div>
                 <div class="col-sm-5">
@@ -42,15 +42,15 @@
                         </div>
                     </form>
                 </div>
-               
+
             </div>
         </div>
         <form name="panelForm">
             <div class="row order-table">
                 <div class="col-md-4">
                     <div class="list-group">
-                        <button type="button" ng-class="{active:transaction.selectedMenu == menu}" ng-repeat="menu in transaction.menu  | filter:Menusearch" ng-click="transaction.changeMenu(menu);"
-                            class="list-group-item">{{menu.name}}</button>
+                        <button type="button" ng-class="{active:transaction.selectedMenu == menu}" ng-repeat="menu in transaction.menu  | filter:Menusearch"
+                            ng-click="transaction.changeMenu(menu);" class="list-group-item">{{menu.name}}</button>
 
                     </div>
                 </div>
@@ -146,6 +146,7 @@
                     <span class="address">{{transaction.printData.cafe.address.address2}}</span>
                     <br>
                     <span class="address">Mo : {{transaction.printData.cafe.phone}}</span>
+                    
                     <!-- <table align="center" class="text-center">
                         <tr>
                             <td>{{transaction.printData.cafe.address.address1}}</td>
@@ -176,6 +177,13 @@
                             {{transaction.printData.transaction.createdDate | date:'medium'}}
                         </div>
                     </div>
+                    <div class="row" ng-if="transaction.printData.transaction.customername"> 
+                        <div class="col-md-12">
+                            {{transaction.printData.transaction.customername}} (Mo : {{transaction.printData.transaction.customerphone}} )
+                        </div>
+                    </div>
+                   
+                    
                     <!-- <div class="row">
                         <div class="col-md-12">
                             # : {{transaction.printData.transaction.createdDate}}

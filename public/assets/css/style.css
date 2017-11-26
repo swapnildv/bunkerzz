@@ -326,3 +326,19 @@ th {
 	border-color: black;
 }
 
+.cafeselect{
+	margin-bottom: 20px;
+}
+
+.cafeselect h3 {
+	margin: 0px;	
+}
+
+.searchBox{
+	padding: 0px 0px 20px 15px;
+}
+
+.tableheader{
+	background-color: #1c2a48;
+	color: #fff;
+}
