@@ -602,6 +602,7 @@ module.exports = function (router) {
                             } else {
                                 menu.name = req.body.name;
                                 menu.isActive = req.body.isActive;
+                                menu.submenus = req.body.submenus;
                                 menu.save(function (err) {
                                     if (err) {
                                         res.send({ success: false, message: err });

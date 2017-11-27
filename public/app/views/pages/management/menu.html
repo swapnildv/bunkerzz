@@ -103,17 +103,31 @@
                 <td colspan="3">
                     <table class="table table-condensed table-bordered">
                         <tr>
-                            <th class="col-md-6">Name</th>
-                            <th class="col-md-3">Price</th>
-                            <th class="col-md-3">IsActive</th>
+                            <th class="col-md-5">Name</th>
+                            <th class="col-md-2">Price</th>
+                            <th class="col-md-2">IsActive</th>
+                            <th class="col-md-3"></th>
                         </tr>
                         <tbody ng-repeat="submenu in menuItem.submenus">
                             <tr>
                                 <td class="col-md-6">
-                                    {{submenu.name}}
+                                    <input ng-if="submenu.EditMode" class="form-control" type="text" name="edit_submenuname" placeholder="Submenu name" ng-model="submenu.name">
+                                    <span ng-if="!submenu.EditMode"> {{submenu.name}}</span>
                                 </td>
-                                <td class="col-md-3"> {{submenu.price}}</td>
-                                <td class="col-md-3">{{submenu.isActive}}</td>
+                                <td class="col-md-3">
+                                    <input ng-if="submenu.EditMode" class="form-control" type="number" name="edit_submenuprice" placeholder="Submenu Price" ng-model="submenu.price">
+                                    <span ng-if="!submenu.EditMode"> {{submenu.price}}</span>
+                                </td>
+                                <td class="col-md-3">
+                                    <select class="form-control" ng-if="submenu.EditMode" ng-options="ele for ele in menu.isActiveOptions" ng-model="submenu.isActive">
+                                    </select>
+                                    <span ng-if="!submenu.EditMode"> {{submenu.isActive}}</span>
+                                </td>
+                                <td class="col-md-3">
+                                    <button type="button" ng-show="!submenu.EditMode" ng-click="menu.submenumenuEdit(submenu,menuItem)" class="btn btn-warning">Edit</button>
+                                    <button type="button" ng-show="submenu.EditMode" ng-click="menu.menuUpdate(menuItem)" class="btn btn-success">Update</button>
+                                    <button type="button" ng-show="submenu.EditMode" class="btn" ng-click="menu.submenucancelUpdate(menuItem)">Cancel</button>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

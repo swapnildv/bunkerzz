@@ -148,6 +148,7 @@ angular.module('managementController', ['userServices', 'managementServices'])
         app.showCreateForm = false;
         app.menuEditMode = false;
         app.editing = false;
+        app.submenuediting = false;
         app.isActiveOptions = [true, false];
 
         app.getMenus = function () {
@@ -199,12 +200,26 @@ angular.module('managementController', ['userServices', 'managementServices'])
             app.newField = angular.copy(menu);
         }
 
+        app.submenumenuEdit = function (submenu, mainmenu) {
+            app.submenucancelUpdate(mainmenu);
+            submenu.EditMode = !submenu.EditMode;
+            app.submenuediting = mainmenu.submenus.indexOf(submenu);
+            app.submenunewField = angular.copy(submenu);
+        }
+
+        app.submenucancelUpdate = function (mainmenu) {
+            if (app.submenuediting !== false) {
+                app.submenunewField.EditMode = !app.submenunewField.EditMode;
+                mainmenu.submenus[app.submenuediting] = app.submenunewField;
+                app.submenunewField = false;
+            }
+
+        }
 
         app.menuUpdate = function (menu) {
             app.loading = true;
             app.errMsg = false;
             app.succMsg = false;
-
             Management.updateMenuById(menu)
                 .then(function (data) {
                     app.loading = false;
@@ -215,6 +230,7 @@ angular.module('managementController', ['userServices', 'managementServices'])
                         app.menuData = {};
                         app.bufferMenu = {};
                         app.editing = false;
+                        app.submenuediting = false;
                         $scope.menuForm.$setPristine();
                     }
                     else {
