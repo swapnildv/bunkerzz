@@ -14,7 +14,11 @@ var Transaction = new Schema({
     user: { type: Schema.Types.ObjectId, required: false, ref: 'User' },
     cafeid: { type: Schema.Types.ObjectId, required: true, ref: 'Cafe' },
     createdDate: { type: Date, required: false },
-    details: { type: [TransactionDetail], required: true }
+    details: { type: [TransactionDetail], required: true },
+    sgst: { type: Number, required: true },
+    cgst: { type: Number, required: true },
+    customername: { type: String },
+    customerphone: { type: Number }
 });
 
 module.exports = mongoose.model('Transaction', Transaction);

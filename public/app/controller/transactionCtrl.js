@@ -1,4 +1,4 @@
-angular.module('transactionController', ['transactionServices', 'managementServices'])
+angular.module('transactionController', ['transactionServices', 'managementServices', 'exportToExcel'])
     .controller('transactionCtrl', function (TransactionService, Management, $rootScope, $scope) {
 
 
@@ -26,9 +26,17 @@ angular.module('transactionController', ['transactionServices', 'managementServi
                         app.menu = data.data.menus;
                         app.loading = false;
                         //initilise order data.
+
+
                         app.orderData.cafeid = $rootScope.loggedInUser.cafeId;
                         app.orderData.user = $rootScope.loggedInUser._id;
                         app.orderData.details = [];
+                        //get cafe details
+                        Management.getCafeById($rootScope.loggedInUser.cafeId).then(function (data) {
+                            if (data.data.success) {
+                                app.orderData.cafe = data.data.cafe;
+                            }
+                        });
 
                     } else {
                         app.errorMsg = data.data.message;
@@ -43,8 +51,12 @@ angular.module('transactionController', ['transactionServices', 'managementServi
             app.selectedMenu = menu;
         }
 
+
+
         app.addToCart = function (submenu) {
             app.orderData.details.push({ qty: 1, cost: submenu.price, submenu_id: submenu._id, submenu: submenu.name, submenu_price: submenu.price });
+            $scope.Menusearch = '';
+            $scope.Submenusearch = '';
         }
 
         app.removeFromCart = function (panel) {
@@ -81,9 +93,11 @@ angular.module('transactionController', ['transactionServices', 'managementServi
                 app.succMsg = false;
                 TransactionService.placeOrder(app.orderData).then(function (data) {
                     if (data.data.success) {
-                        debugger;
                         app.printData = angular.copy(app.orderData);
+                        app.printData.transaction = data.data.transaction;
                         app.orderData.details = [];
+                        app.orderData.customername = '';
+                        app.orderData.customerphone = '';
                         app.loading = false;
                         app.succMsg = data.data.message;
                     } else {
@@ -100,11 +114,11 @@ angular.module('transactionController', ['transactionServices', 'managementServi
 
 
         $scope.Print = function () {
-            console.log('print');
+
             var printContents, popupWin;
             printContents = document.getElementById('print-section').innerHTML;
             popupWin = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');
-            popupWin.document.open();
+            //popupWin.document.open();
             popupWin.document.write(`
                   <html>
                     <head>
@@ -148,7 +162,7 @@ angular.module('transactionController', ['transactionServices', 'managementServi
                           <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" 
                           integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
                     </head>
-                <body onload="window.print();window.close();">${printContents}</body>
+                        <body onload="window.print();window.close();">${printContents}</body>
                   </html>`
             );
             popupWin.document.close();
@@ -161,13 +175,14 @@ angular.module('transactionController', ['transactionServices', 'managementServi
             }
             return total
         }
-    }).controller('reportCtrl', function (TransactionService, $rootScope, $scope) {
+    }).controller('reportCtrl', function (TransactionService, Management, exportToExcelFactory, $timeout, $rootScope, $scope) {
         //console.log(reportCtrl);
         var app = this;
         app.loading = false;
         app.errMsg = false;
         app.succMsg = false;
         app.maxDate = new Date();
+        app.selectedcafe = '';
         $scope.fromDateModel = new Date();
         $scope.toDateModel = new Date();
         //watch on fromDate.
@@ -185,6 +200,18 @@ angular.module('transactionController', ['transactionServices', 'managementServi
                 $scope.myForm.fromDateControl.$setValidity("endBeforeStart", toDate >= fromDate);
             }
         }
+        function calcTotal() {
+            $scope.total = 0;
+            $scope.totalcgst = 0
+            $scope.totalsgst = 0;
+
+            app.transactions.forEach(element => {
+                $scope.total += element.totalcost;
+                $scope.totalcgst += element.cgst;
+                $scope.totalsgst += element.sgst;
+            });
+
+        }
 
         app.getTransactionReports = function (isValid) {
             if (isValid) {
@@ -192,7 +219,7 @@ angular.module('transactionController', ['transactionServices', 'managementServi
                 app.succMsg = false;
                 app.loading = true;
 
-                var reportData = { cafeid: $rootScope.loggedInUser.cafeId, fromdate: $scope.fromDateModel, todate: $scope.toDateModel };
+                var reportData = { cafeid: app.selectedcafe, fromdate: $scope.fromDateModel, todate: $scope.toDateModel };
                 reportData.fromdate = new Date(reportData.fromdate.setHours(0, 0, 0));
                 reportData.todate = new Date(reportData.todate.setHours(23, 59, 59));
 
@@ -203,6 +230,7 @@ angular.module('transactionController', ['transactionServices', 'managementServi
                     TransactionService.getTransactionReport(reportData).then(function (data) {
                         if (data.data.success) {
                             app.transactions = data.data.transactions;
+                            calcTotal();
                             app.loading = false;
 
                         } else {
@@ -214,17 +242,50 @@ angular.module('transactionController', ['transactionServices', 'managementServi
             }
             else {
                 app.loading = false;
-                app.errMsg = "Please ensure dates are valid!";
+                app.errMsg = "Please ensure required data is valid!";
                 app.transactions = [];
             }
         }
+        app.exportToExcel = function (tableId) {
+            // ex: '#my-table'
+            debugger;
+            var exportHref = exportToExcelFactory.tableToExcel(tableId, 'WireWorkbenchDataExport');
+            $timeout(function () { location.href = exportHref; }, 100); // trigger download
+        };
 
         $scope.sort = function (keyname) {
             $scope.sortKey = keyname;   //set the sortKey to the param passed
             $scope.reverse = !$scope.reverse; //if true make it false and vice versa
         }
 
-        //Printing
+        app.loadReport = function () {
+            //check user role 
+            if ($rootScope.loggedInUser) {
+                if ($rootScope.loggedInUser.permission === 'admin') {
+                    //get cafe list.
+                    app.errMsg = false;
+                    app.succMsg = false;
+                    app.loading = true;
+                    Management.getCafes().then(function (data) {
+                        if (data.data.success) {
+                            app.cafeList = data.data.cafes;
+                            app.loading = false;
+                        } else {
+                            app.errorMsg = data.data.message;
+                            app.loading = false;
+                        }
+                    });
+                } else {
+                    if ($rootScope.loggedInUser.cafeId) {
+                        app.selectedcafe = $rootScope.loggedInUser.cafeId;
+                    }
+                }
+            }
 
+
+
+        }
+
+        app.loadReport();
 
     });

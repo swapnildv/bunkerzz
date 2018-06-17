@@ -1,31 +1,50 @@
-<div class="page-header">
-    <h1>Login</h1>
+<div class="login-form">
+    <!-- <div class="page-header">
+        <h1>Login</h1>
+    </div> -->
+    <form ng-submit="main.doLogin(loginData);">
+
+        <!-- <div class="avatar"> -->
+        <div class="avatar">
+            <img  src="assets/images/logo.jpg" width="100">
+        </div>
+        <!-- <span class="glyphicon glyphicon-user" aria-hidden="true"></span> -->
+        <!-- </div> -->
+        <h4 class="modal-title">Log In</h4>
+        <!-- <label>Username :</label> -->
+        <input class="form-control" type="text" name="username" placeholder="Username" ng-model="main.loginData.username">
+        <br>
+
+
+        <!-- <label>Password :</label> -->
+        <input class="form-control" type="password" name="password" placeholder="Password" ng-model="main.loginData.password">
+        <br>
+
+
+        <!-- <button class="btn btn-primary" type="submit">Login</button> -->
+
+        <div class="form-group small clearfix">
+            <!-- <label class="checkbox-inline"> -->
+            <!-- <input type="checkbox"> Remember me</label> -->
+
+            <a href="/resetpassword" class="forgot-link"> Forgot Password?</a>
+
+            <!-- <a href="https://www.tutorialrepublic.com/snippets/bootstrap/elegant-account-login-form-with-avatar-icon.php#" class="forgot-link">Forgot Password?</a> -->
+        </div>
+
+        <input type="submit" class="btn btn-primary btn-block btn-lg" value="Login">
+        <!-- <div class="reset">
+            <a href="/resetpassword">
+                <button type="button" class="btn btn-danger">Forgot Password</button>
+            </a>
+        </div> -->
+    </form>
 </div>
-
-<form ng-submit="main.doLogin(loginData);">
-    
-    <label>Username :</label>
-    <input class="form-control" type="text" name="username" placeholder="Pleas enter username / email" ng-model="main.loginData.username">
-    <br>
-
-    
-    <label>Password :</label>
-    <input class="form-control" type="password" name="password" placeholder="Please enter password" ng-model="main.loginData.password">
-    <br>
-
-    <button class="btn btn-primary" type="submit">Login</button>
-
-    <div class="reset">
-        <a href="/resetpassword">
-            <button type="button" class="btn btn-danger">Forgot Password</button>
-        </a>
-    </div>
-</form>
 <br>
 <div class="text-center" ng-show="main.loading">
-        <div class="spinner">
-        </div>
+    <div class="spinner">
     </div>
+</div>
 <br>
 <div class="row show-hide-message" ng-show="main.succMsg">
     <div class="alert alert-success">{{main.succMsg}}</div>

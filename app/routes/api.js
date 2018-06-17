@@ -2,6 +2,7 @@
 var User = require('../models/user');
 var Cafe = require('../models/cafe');
 var Menu = require('../models/menu');
+var Test = require('../models/test');
 var Transaction = require('../models/transaction');
 
 
@@ -30,6 +31,9 @@ module.exports = function (router) {
         user.password = req.body.password;
         user.name = req.body.name;
         user.email = req.body.email;
+        user.permission = req.body.permission;
+        user.cafeId = req.body.cafeid;
+
         if (req.body.username == null || req.body.username == "" || req.body.password == null || req.body.password == "" ||
             req.body.name == null || req.body.name == "" || req.body.email == null || req.body.email == "") {
             res.json({ success: false, message: 'Ensure username ,email,name and password were provided' })
@@ -69,10 +73,40 @@ module.exports = function (router) {
 
     });
 
+    router.post('/testpost', function (req, res) {
+        var test = new Test();
+        test.name = req.body.name;
+        test.raceevntid = req.body.raceevntid;
+
+        test.save(function (err) {
+            if (err) {
+                res.send({ success: false, message: err });
+            }
+            else {
+                res.send({ success: true, test: test });
+            }
+        })
+
+    });
+
+    router.get('/testpost', function (req, res) {
+        Test.find({}, function (err, tests) {
+
+            if (err) console.log(err);
+
+            if (!tests) {
+                res.send({ success: false, message: 'Races not found!' });
+            } else {
+                res.send({ success: true, tests: tests });
+            }
+
+        });
+    });
+
 
     router.post('/authenticate', function (req, res) {
 
-        User.findOne({ username: req.body.username }).select('username password cafeId').exec(function (err, user) {
+        User.findOne({ username: req.body.username }).select('username password cafeId permission').exec(function (err, user) {
             if (err) throw err;
             if (!user) {
                 res.send({ success: false, message: 'Could not authenticate user' });
@@ -89,7 +123,7 @@ module.exports = function (router) {
                 }
                 else {
                     var _token = jwt.sign({ user: user }, secret, { expiresIn: '24h' });
-                    res.send({ success: true, message: 'User authenticated!', token: _token });
+                    res.send({ success: true, message: 'User authenticated!', token: _token, user: user });
                 }
             }
         });
@@ -170,9 +204,9 @@ module.exports = function (router) {
                                 to: user.email, // list of receivers
                                 subject: 'Bunkerzz Reset Password Request', // Subject line
                                 text: 'Hello ' + user.username + ', You recently requested a password reset link.Please click on the link below to reset your password : ' +
-                                '<br><br><a href="http://localhost:8080/reset/' + user.resettoken + '">http://localhost:8080/reset/</a>',
+                                '<br><br><a href="https://shrouded-oasis-45996.herokuapp.com/reset/' + user.resettoken + '">https://shrouded-oasis-45996.herokuapp.com/reset/</a>',
                                 html: 'Hello <strong>' + user.username + '</strong>,<br><br>You recently requested a password reset link.Please click on the link below to reset your password : ' +
-                                '<br><br><a href="http://localhost:8080/reset/' + user.resettoken + '">http://localhost:8080/reset/</a>'
+                                '<br><br><a href="https://shrouded-oasis-45996.herokuapp.com/reset/' + user.resettoken + '">https://shrouded-oasis-45996.herokuapp.com/reset/</a>'
                             };
                             console.log('email sent');
                             transporter.sendMail(mailOptions, function (err, info) {
@@ -303,6 +337,7 @@ module.exports = function (router) {
 
     router.get('/management', function (req, res) {
         User.find({}, function (err, users) {
+
             if (err) throw err;
             User.findOne({ username: req.decoded.username }).select('permission').exec(function (err, mainUser) {
                 if (err) throw err;
@@ -323,14 +358,46 @@ module.exports = function (router) {
         });
     });
 
+    //get users by cafeid
+    router.get('/users/:cafeid', function (req, res) {
+        User.find({ cafeId: req.params.cafeid }).select('').exec(function (err, users) {
+
+            //console.log(req.decoded.username);
+            if (err) throw err;
+            User.findOne({ username: req.decoded.user.username }).select('permission').exec(function (err, mainUser) {
+                if (err) throw err;
+                if (!mainUser) {
+                    res.send({ success: false, message: 'No user found!' });
+                } else {
+                    if (mainUser.permission === 'admin') {
+                        if (!users) {
+                            res.send({ success: false, message: 'No users found!' });
+                        } else {
+                            //console.log(users);
+                            res.send({ success: true, users: users });
+                        }
+                    } else {
+                        res.send({ success: false, message: 'Insifficient permissions.' });
+                    }
+                }
+            });
+
+        });
+    });
+
 
     //create new cafe.
     router.post('/cafe', function (req, res) {
         var cafe = new Cafe();
         cafe.name = req.body.name;
         cafe.address = req.body.address;
-        if (req.body.name == null || req.body.name == "" || req.body.address == null || req.body.address == "") {
-            res.json({ success: false, message: 'Ensure cafe name and address were provided' })
+        cafe.gst = req.body.gst;
+        cafe.phone = req.body.phone;
+        cafe.email = req.body.email;
+        if (req.body.name == null || req.body.name == "" || req.body.address == null || req.body.address == "" ||
+            req.body.gst == null || req.body.gst == "" || req.body.phone == null || req.body.phone == "" ||
+            req.body.email == null || req.body.email == "") {
+            res.json({ success: false, message: 'Ensure all required information were provided' });
         }
         else {
             cafe.save(function (err) {
@@ -355,6 +422,58 @@ module.exports = function (router) {
             });
         }
     });
+
+    //Update cafe item
+    router.put('/cafe', function (req, res) {
+
+
+        if (req.body._id == null || req.body._id == "") {
+            res.json({ success: false, message: 'Ensure cafe details are provided!' })
+        } else {
+            User.findOne({ username: req.decoded.user.username }).select('permission').exec(function (err, mainUser) {
+                if (err) throw err;
+                if (!mainUser) {
+                    res.send({ success: false, message: 'No user found!' });
+                } else {
+                    if (mainUser.permission === 'admin') {
+                        //update menu.
+                        Cafe.findOne({ _id: req.body._id }).select().exec(function (err, cafe) {
+                            if (err) throw err;
+                            if (!cafe) {
+                                res.send({ success: false, message: 'Something went wrong!' });
+                            } else {
+
+                                //set cafe details.
+                                cafe.name = req.body.name;
+                                cafe.address = req.body.address;
+                                cafe.gst = req.body.gst;
+                                cafe.phone = req.body.phone;
+                                cafe.email = req.body.email;
+                                // menu.name = req.body.name;
+                                // menu.isActive = req.body.isActive;
+
+
+                                cafe.save(function (err) {
+                                    if (err) {
+                                        res.send({ success: false, message: err });
+                                    }
+                                    else {
+                                        res.send({ success: true, message: 'Cafe has succefully updated' });
+                                    }
+                                });
+
+                            }
+                        });
+                    } else {
+                        res.send({ success: false, message: 'Insifficient permissions.' });
+                    }
+
+                }
+            });
+        }
+
+    });
+
 
     //get list of cafe.
     router.get('/cafe', function (req, res) {
@@ -381,24 +500,15 @@ module.exports = function (router) {
 
     //get a single cafe
     router.get('/cafe/:cafeid', function (req, res) {
-        Cafe.findOne({ cafeId: req.params.cafeid }).select().exec(function (err, cafe) {
-            if (err) throw err;
-            User.findOne({ username: req.decoded.user.username }).select('permission').exec(function (err, mainUser) {
-                if (err) throw err;
-                if (!mainUser) {
-                    res.send({ success: false, message: 'No user found!' });
-                } else {
-                    if (mainUser.permission === 'admin') {
-                        if (!cafes) {
-                            res.send({ success: false, message: 'Cafes not found!' });
-                        } else {
-                            res.send({ success: true, cafes: cafes, permission: mainUser.permission });
-                        }
-                    } else {
-                        res.send({ success: false, message: 'Insifficient permissions.' });
-                    }
-                }
-            });
+        console.log(req.params.cafeid);
+        Cafe.findOne({ _id: req.params.cafeid }).select().exec(function (err, cafe) {
+            if (err) console.log(err);
+            if (!cafe) {
+                res.send({ success: false, message: 'Cafe not found!' });
+            } else {
+                res.send({ success: true, cafe: cafe });
+            }
+
         });
     });
 
@@ -492,13 +602,7 @@ module.exports = function (router) {
                             } else {
                                 menu.name = req.body.name;
                                 menu.isActive = req.body.isActive;
-                                // if (req.body.submenus != null) {
-                                //     if (req.body.submenus.length > 0) {
-                                //         req.body.submenus.forEach(function (element) {
-                                //             menu.submenus.push(element);
-                                //         }, this);
-                                //     }
-                                // }
+                                menu.submenus = req.body.submenus;
                                 menu.save(function (err) {
                                     if (err) {
                                         res.send({ success: false, message: err });
@@ -597,29 +701,48 @@ module.exports = function (router) {
             res.json({ success: false, message: 'Invalid order details!' })
         }
         else {
-
-            //create order
-            var transaction = new Transaction();
-            transaction.user = req.body.user;
-            transaction.cafeid = req.body.cafeid;
-            transaction.createdDate = new Date();
-            transaction.totalcost = req.body.totalcost;
-
-
-            req.body.details.forEach(function (element) {
-                transaction.details.push(element);
-            }, this);
-
-
-            transaction.save(function (err) {
-                if (err) {
-                    if (err) {
-                        res.json({ success: false, message: err });
-                    }
+            //get cafe details.
+            Cafe.findOne({ _id: req.body.cafeid }).select().exec(function (err, cafe) {
+                if (err) console.log(err);
+                if (!cafe) {
+                    res.send({ success: false, message: 'Cafe not found!' });
                 } else {
-                    res.json({ success: true, message: 'Order succesfully sent', transaction: transaction });
+
+
+                    //create order
+                    var transaction = new Transaction();
+                    transaction.user = req.body.user;
+                    transaction.cafeid = req.body.cafeid;
+                    transaction.createdDate = new Date();
+                    transaction.totalcost = req.body.totalcost;
+                    transaction.customername = req.body.customername;
+                    transaction.customerphone = req.body.customerphone;
+                    transaction.sgst = ((cafe.gst.sgst / 100) * req.body.totalcost);
+                    transaction.cgst = ((cafe.gst.cgst / 100) * req.body.totalcost);
+
+                    req.body.details.forEach(function (element) {
+                        transaction.details.push(element);
+                    }, this);
+
+
+                    transaction.save(function (err) {
+                        if (err) {
+                            if (err) {
+                                res.json({ success: false, message: err });
+                            }
+                        } else {
+                            res.json({ success: true, message: 'Order succesfully sent', transaction: transaction });
+                        }
+                    });
                 }
+
+
+
+
+
             });
+
+
         }
     });
 

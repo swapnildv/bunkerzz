@@ -33,6 +33,7 @@
 
     <!-- Services. -->
     <script src="app/services/userServices.js"></script>
+    <script src="app/services/exportToExcel.js"></script>
     <script src="app/services/authService.js"></script>
     <script src="app/services/mgntService.js"></script>
     <script src="app/services/transactionService.js"></script>
@@ -46,7 +47,7 @@
 <body ng-app="bunkerzz" ng-controller="mainCtrl as main">
 
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-inverse">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
@@ -60,24 +61,25 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li ng-show="main.isLoggedIn" class="active">
-                        <a href="/">Home</a>
-                    </li>
+                    <!-- <li ng-show="main.isLoggedIn" class="active">
+                        <a href="/home">Home</a>
+                    </li> -->
                     <li ng-show="!main.isLoggedIn">
                         <a href="/login">Login</a>
                     </li>
-                    <li ng-show="!main.isLoggedIn">
+                    <!-- <li ng-show="!main.isLoggedIn">
                         <a href="/register">Register</a>
-                    </li>
-                    <li ng-show="main.isLoggedIn && main.authorised ">
+                    </li> -->
+                    <li ng-show="main.isLoggedIn && main.authorised" ng-class="{active: $route.current.activetab == 'cafe'}">
                         <a href="/cafe">Cafe</a>
                     </li>
-                    <li ng-show="main.isLoggedIn && (main.role === 'moderator' || main.role === 'user')">
+                    <li ng-show="main.isLoggedIn && (main.role === 'moderator' || main.role === 'user')" ng-class="{active: $route.current.activetab == 'order'}">
                         <a href="/order">Order</a>
                     </li>
-                    <li ng-show="main.isLoggedIn && (main.role === 'moderator' || main.role === 'admin')">
+                    <li ng-show="main.isLoggedIn && (main.role === 'moderator' || main.role === 'admin')" ng-class="{active: $route.current.activetab == 'report'}">
                         <a href="/reports/transactions">Reports</a>
                     </li>
+
                     <!-- <li ng-show="main.isLoggedIn && main.authorised">
                         <a href="/management">Management</a>
                     </li> -->
@@ -114,6 +116,10 @@
                     <li ng-show="main.isLoggedIn">
                         <a href="#">Hello {{main.username}}</a>
                     </li>
+
+
+                  
+
                 </ul>
             </div>
             <!--/.nav-collapse -->
@@ -123,11 +129,9 @@
     <div class="container theme-showcase" role="main">
 
         <!-- Main jumbotron for a primary marketing message or call to action -->
-        <div class="jumbotron">
+        <!-- <div class="jumbotron">
             <h1>Bunkerzz</h1>
-            <!-- <p>This is a template showcasing the optional theme stylesheet included in Bootstrap. Use it as a starting point
-                to create something more unique by building on or modifying it.</p> -->
-        </div>
+        </div> -->
         <div ng-view></div>
         <!-- <div class="container">
             <h2>Modal Example</h2>

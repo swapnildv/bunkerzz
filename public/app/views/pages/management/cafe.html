@@ -1,75 +1,139 @@
-<div ng-show="!cafe.showCreateForm" class="panel panel-primary">
-    <div class="panel-heading">
-        <strong>Cafe Management</strong>
+<div class="container">
+
+    <div ng-show="!cafe.showCreateForm" class="panel panel-primary">
+        <div class="panel-heading">
+            <strong>Cafe Management</strong>
+        </div>
+        <table class="table">
+            <tr>
+                <th>Name</th>
+                <th>address</th>
+                <th colspan="2"></th>
+            </tr>
+            <tr ng-repeat="cafeItem in cafe.cafes">
+                <td>{{cafeItem.name}}</td>
+                <td>{{cafeItem.address.address1}} {{cafeItem.address.address2}} {{cafeItem.address.address3}}</td>
+                <td>
+                    <a href="/menu/{{cafeItem._id}}">
+                        <button type="button" class="btn btn-primary">Menu</button>
+                    </a>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-primary" ng-click="cafe.editCafeButton(cafeItem)">Edit</button>
+                </td>
+                <td>
+                    <a href="/users/{{cafeItem._id}}">
+                        <button type="button" class="btn btn-primary">Users</button>
+                    </a>
+                </td>
+            </tr>
+        </table>
     </div>
-    <table class="table">
-        <tr>
-            <th>Name</th>
-            <th>Address</th>|
-        </tr>
-        <tr ng-repeat="cafe in cafe.cafes">
-            <td>{{cafe.name}}</td>
-            <td>{{cafe.address}}</td>
-            <td>
-                <a href="/menu/{{cafe._id}}">
-                    <button type="button" class="btn btn-primary">Menu</button>
-                </a>
-                <!-- <a href="#">
-                    <button type="button" class="btn btn-danger">Delete</button>
-                </a> -->
-            </td>
-        </tr>
-    </table>
-</div>
 
-<br>
-<button ng-show="!cafe.showCreateForm" class="btn btn-primary" type="button" ng-click="cafe.showCreateForm = true">Create New</button>
-<br>
-<div ng-show="cafe.showCreateForm">
+    <br>
+    <button ng-show="!cafe.showCreateForm" class="btn btn-primary" type="button" ng-click="cafe.createCafeButton();">Create New</button>
+    <br>
+    <div ng-show="cafe.showCreateForm">
 
 
-    <div class="page-header">
-        <h1>Create Cafe</h1>
-    </div>
-    <form name="cafeForm" ng-submit="cafe.addCafe(cafeData,cafeForm.$valid);" novalidate>
-        <div ng-class="{'has-success':(cafeForm.name.$valid && !cafeForm.name.$pristine),'has-error':(!cafeForm.name.$valid && !cafeForm.name.$pristine) || (!cafeForm.name.$valid && cafeForm.$submitted)}">
+        <div class="page-header">
+            <h1>{{cafe.FormMode == 'create' ? "Add Cafe" : "Edit Cafe"}}</h1>
+        </div>
+        <form name="cafeForm" ng-submit="cafe.addCafe(cafeData,cafeForm.$valid);" novalidate>
             <label>Name :</label>
-            <input class="form-control" type="text" name="name" placeholder="Please enter name" ng-model="cafe.cafeData.name" ng-pattern="/^[a-zA-Z\ ]+$/i"
-                ng-minlength="3" ng-maxlength="20" required>
-            <p class="help-block" ng-show="(!cafeForm.name.$pristine && cafeForm.name.$error.required) || (cafeForm.$submitted && cafeForm.name.$error.required)">This field is required</p>
-            <ul class="help-block" ng-show="(!cafeForm.name.$pristine && cafeForm.name.$error.pattern) || (!cafeForm.name.$pristine &&  cafeForm.name.$error.minlength) || (!cafeForm.name.$pristine &&  cafeForm.name.$error.maxlength)">
-                <li>No special characters are allowed in Name field.</li>
-                <li>Must not contain any numbers.</li>
-                <li>Must be atleast 3 chracters but no more than 20.</li>
-            </ul>
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-md-4" ng-class="{'has-success':(cafeForm.address.$valid && !cafeForm.address.$pristine),'has-error':(!cafeForm.address.$valid && !cafeForm.address.$pristine) || (!cafeForm.address.$valid && cafeForm.$submitted)}">
-                <label>Address :</label>
-                <input class="form-control" type="text" name="address" placeholder="Please enter address" ng-model="cafe.cafeData.address"
-                    required>
-                <p class="help-block" ng-show="(!cafeForm.address.$pristine && cafeForm.address.$error.required) || (cafeForm.$submitted && cafeForm.address.$error.required)">This field is required</p>
+            <div class="row">
+                <div class="col-md-4" ng-class="{'has-success':(cafeForm.name.$valid && !cafeForm.name.$pristine),'has-error':(!cafeForm.name.$valid && !cafeForm.name.$pristine) || (!cafeForm.name.$valid && cafeForm.$submitted)}">
+                    <input class="form-control" type="text" name="name" placeholder="Please enter name" ng-model="cafe.cafeData.name" required>
+                    <p class="help-block" ng-show="(!cafeForm.name.$pristine && cafeForm.name.$error.required) || (cafeForm.$submitted && cafeForm.name.$error.required)">This field is required</p>
+                    <!-- <ul class="help-block" ng-show="(!cafeForm.name.$pristine && cafeForm.name.$error.pattern) || (!cafeForm.name.$pristine &&  cafeForm.name.$error.minlength) || (!cafeForm.name.$pristine &&  cafeForm.name.$error.maxlength)">
+                        <li>No special characters are allowed in Name field.</li>
+                        <li>Must not contain any numbers.</li>
+                        <li>Must be atleast 3 chracters but no more than 20.</li>
+                    </ul> -->
+                </div>
             </div>
-        </div>
+            <br>
+            <label>Contact :</label>
+            <div class="row">
+                <div class="col-md-4" ng-class="{'has-success':(cafeForm.phone.$valid && !cafeForm.phone.$pristine),'has-error':(!cafeForm.phone.$valid && !cafeForm.phone.$pristine) || (!cafeForm.phone.$valid && cafeForm.$submitted)}">
 
-        <br>
-        <button class="btn btn-primary" type="submit">Submit</button>
-        <button class="btn btn-primary" type="button" ng-click="cafe.showCreateForm = false">Cancel</button>
-    </form>
-</div>
+                    <input class="form-control" type="number" name="phone" placeholder="Phone No." ng-model="cafe.cafeData.phone" required>
+                    <p class="help-block" ng-show="(!cafeForm.phone.$pristine && cafeForm.phone.$error.required) || (cafeForm.$submitted && cafeForm.phone.$error.required)">This field is required</p>
+                </div>
+            </div>
+            <br>
+            <label>E-mail :</label>
+            <div class="row">
+                <div class="col-md-4" ng-class="{'has-success':(cafeForm.email.$valid && !cafeForm.email.$pristine),'has-error':(!cafeForm.email.$valid && !cafeForm.email.$pristine) || (!cafeForm.email.$valid && cafeForm.$submitted)}">
+                    <input class="form-control" type="text" name="email" placeholder="E-mail" ng-model="cafe.cafeData.email" ng-pattern="/^\w.+\@[a-zA-Z_]+?\.[a-zA-Z]{2,}$/"
+                        required>
+                    <p class="help-block" ng-show="(!cafeForm.email.$pristine && cafeForm.email.$error.required) || (cafeForm.$submitted && cafeForm.email.$error.required)">This field is required</p>
+                    <ul class="help-block" ng-show="(!cafeForm.email.$pristine && cafeForm.email.$error.pattern)">
+                        <li>Must contain @.</li>
+                        <li>Must not contain any special characters.</li>
+                    </ul>
+                </div>
+            </div>
+            <br>
+            <label>address1 :</label>
+            <div class="row">
 
-<br>
-<div class="text-center" ng-show="cafe.loading">
-    <div class="spinner">
+                <div class="col-md-4" ng-class="{'has-success':(cafeForm.address1.$valid && !cafeForm.address1.$pristine),'has-error':(!cafeForm.address1.$valid && !cafeForm.address1.$pristine) || (!cafeForm.address1.$valid && cafeForm.$submitted)}">
+
+                    <input class="form-control" type="text" name="address1" placeholder="Address1" ng-model="cafe.cafeData.address.address1"
+                        required>
+                    <p class="help-block" ng-show="(!cafeForm.address1.$pristine && cafeForm.address1.$error.required) || (cafeForm.$submitted && cafeForm.address1.$error.required)">This field is required</p>
+                </div>
+                <div class="col-md-4" ng-class="{'has-success':(cafeForm.address2.$valid && !cafeForm.address2.$pristine),'has-error':(!cafeForm.address2.$valid && !cafeForm.address2.$pristine) || (!cafeForm.address2.$valid && cafeForm.$submitted)}">
+                    <input class="form-control" type="text" name="address2" placeholder="Address2" ng-model="cafe.cafeData.address.address2"
+                        required>
+                    <p class="help-block" ng-show="(!cafeForm.address2.$pristine && cafeForm.address2.$error.required) || (cafeForm.$submitted && cafeForm.address2.$error.required)">This field is required</p>
+                </div>
+                <div class="col-md-4" ng-class="{'has-success':(cafeForm.address3.$valid && !cafeForm.address3.$pristine),'has-error':(!cafeForm.address3.$valid && !cafeForm.address3.$pristine) || (!cafeForm.address3.$valid && cafeForm.$submitted)}">
+                    <input class="form-control" type="text" name="address3" placeholder="Address3" ng-model="cafe.cafeData.address.address3"
+                        required>
+                    <p class="help-block" ng-show="(!cafeForm.address3.$pristine && cafeForm.address3.$error.required) || (cafeForm.$submitted && cafeForm.address3.$error.required)">This field is required</p>
+                </div>
+            </div>
+
+            <br>
+            <label>GST :</label>
+            <div class="row">
+
+                <div class="col-md-4" ng-class="{'has-success':(cafeForm.sgst.$valid && !cafeForm.sgst.$pristine),'has-error':(!cafeForm.sgst.$valid && !cafeForm.sgst.$pristine) || (!cafeForm.sgst.$valid && cafeForm.$submitted)}">
+
+                    <input class="form-control" type="number" name="sgst" placeholder="SGST (%)" ng-model="cafe.cafeData.gst.sgst" required>
+                    <p class="help-block" ng-show="(!cafeForm.sgst.$pristine && cafeForm.sgst.$error.required) || (cafeForm.$submitted && cafeForm.sgst.$error.required)">This field is required</p>
+                </div>
+                <div class="col-md-4" ng-class="{'has-success':(cafeForm.cgst.$valid && !cafeForm.cgst.$pristine),'has-error':(!cafeForm.cgst.$valid && !cafeForm.cgst.$pristine) || (!cafeForm.cgst.$valid && cafeForm.$submitted)}">
+                    <input class="form-control" type="number" name="cgst" placeholder="CGST (%)" ng-model="cafe.cafeData.gst.cgst" required>
+                    <p class="help-block" ng-show="(!cafeForm.cgst.$pristine && cafeForm.cgst.$error.required) || (cafeForm.$submitted && cafeForm.cgst.$error.required)">This field is required</p>
+                </div>
+                <div class="col-md-4" ng-class="{'has-success':(cafeForm.gstno.$valid && !cafeForm.gstno.$pristine),'has-error':(!cafeForm.gstno.$valid && !cafeForm.gstno.$pristine) || (!cafeForm.gstno.$valid && cafeForm.$submitted)}">
+                    <input class="form-control" type="text" name="gstno" placeholder="GST No." ng-model="cafe.cafeData.gst.gstno" required>
+                    <p class="help-block" ng-show="(!cafeForm.gstno.$pristine && cafeForm.gstno.$error.required) || (cafeForm.$submitted && cafeForm.gstno.$error.required)">This field is required</p>
+                </div>
+            </div>
+            <br>
+
+            <button class="btn btn-primary" type="submit">Submit</button>
+            <button class="btn btn-primary" type="button" ng-click="cafe.cancelForm()">Cancel</button>
+        </form>
     </div>
-</div>
-<br>
-<div class="row show-hide-message" ng-show="cafe.succMsg">
-    <div class="alert alert-success">{{cafe.succMsg}}</div>
-</div>
-<br>
 
-<div class="row show-hide-message" ng-show="cafe.errMsg">
-    <div class="alert alert-danger">{{cafe.errMsg}}</div>
+    <br>
+    <div class="text-center" ng-show="cafe.loading">
+        <div class="spinner">
+        </div>
+    </div>
+    <br>
+    <div class="row show-hide-message" ng-show="cafe.succMsg">
+        <div class="alert alert-success">{{cafe.succMsg}}</div>
+    </div>
+    <br>
+
+    <div class="row show-hide-message" ng-show="cafe.errMsg">
+        <div class="alert alert-danger">{{cafe.errMsg}}</div>
+    </div>
+
 </div>

@@ -1,5 +1,6 @@
 angular.module('bunkerzz',
     ['angularUtils.directives.dirPagination',
+        'exportToExcel',
         'appRoutes',
         'userController',
         'userServices',

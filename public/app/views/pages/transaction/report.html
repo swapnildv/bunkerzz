@@ -1,13 +1,23 @@
 <form name="myForm" ng-submit="report.getTransactionReports(myForm.$valid);" novalidate>
-    <div class="row">
+    <div class="row cafeselect" ng-show="report.cafeList.length > 0">
+        <div class="col-md-2">
+            <h3>Select cafe</h3>
+        </div>
+        <div class="col-md-4">
 
+            <select class="form-control" name="formCafeSelect" placeholder="Select cafe" ng-model="report.selectedcafe" required>
+                <option ng-repeat="ele in report.cafeList" value="{{ele._id}}">{{ele.name}}</option>
+            </select>
+            <span class="help-block" ng-show="(!myForm.formCafeSelect.$pristine && myForm.formCafeSelect.$error.required) || (myForm.$submitted && myForm.formCafeSelect.$error.required)">
+                Required!</span>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-4">
             <label for="fromDate">From Date:</label>
             <input type="date" id="fromDate" name="fromDateControl" ng-model="fromDateModel" placeholder="yyyy-MM-dd" min="2013-01-01"
                 max="{{report.maxDate}}" required />
             <div role="alert">
-
-
                 <span class="help-block" ng-show="myForm.fromDateControl.$error.required">
                     Required!</span>
                 <span class="help-block" ng-show="myForm.fromDateControl.$error.max">
@@ -38,28 +48,42 @@
 </form>
 
 <div class="row" ng-show="report.transactions.length > 0">
-    <div class="panel-heading">
+    <!-- <div class="panel-heading">
         <strong>Order Summary</strong>
-    </div>
-    <form class="form-inline">
+    </div> -->
+    <form class="form-inline searchBox">
         <div class="form-group">
             <label>Search</label>
             <input type="text" ng-model="search" class="form-control" placeholder="Search">
+            <button class="btn btn-link" ng-click="report.exportToExcel('#exportable')">
+                <span class="glyphicon glyphicon-share"></span>
+                Export to Excel
+            </button>
         </div>
     </form>
-    <table class="table table-striped table-hover">
-        <tr>
-            <th></th>
-            <th>#</th>
 
-            <th ng-click="sort('createdDate')">Time
-                <span class="glyphicon sort-icon" ng-show="sortKey=='createdDate'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
-            </th>
-            <th ng-click="sort('totalcost')">Amount (Rs.)
-                <span class="glyphicon sort-icon" ng-show="sortKey=='totalcost'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
-            </th>
-        </tr>
-        <tr dir-paginate-start="tran in report.transactions|orderBy:sortKey:reverse|filter:search|itemsPerPage:5">
+    <table class="table table-striped table-hover">
+
+        <thead class="tableheader">
+            <tr>
+                <th></th>
+                <th>#</th>
+
+                <th ng-click="sort('createdDate')">Time
+                    <span class="glyphicon sort-icon" ng-show="sortKey=='createdDate'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                </th>
+                <th ng-click="sort('totalcost')">Amount (Rs.)
+                    <span class="glyphicon sort-icon" ng-show="sortKey=='totalcost'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                </th>
+                <th ng-click="sort('sgst')">SGST (Rs.)
+                    <span class="glyphicon sort-icon" ng-show="sortKey=='sgst'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                </th>
+                <th ng-click="sort('cgst')">CGST (Rs.)
+                    <span class="glyphicon sort-icon" ng-show="sortKey=='cgst'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                </th>
+            </tr>
+        </thead>
+        <tr dir-paginate-start="tran in report.transactions|orderBy:sortKey:reverse|filter:search|itemsPerPage:12">
             <td>
                 <button ng-click="tran.isCollapsed=!tran.isCollapsed" expand>
                     <span ng-bind="tran.isCollapsed ? '-' : '+'"></span>
@@ -68,6 +92,8 @@
             <td>{{$index+1}}</td>
             <td>{{tran.createdDate | date:'medium'}}</td>
             <td>{{tran.totalcost}}</td>
+            <td>{{tran.sgst}}</td>
+            <td>{{tran.cgst}}</td>
         </tr>
         <tr dir-paginate-end ng-show="tran.isCollapsed">
             <td colspan="4">
@@ -89,10 +115,73 @@
                 </table>
             </td>
         </tr>
+        <tr>
+            <td colspan="3">
+                <strong>Total :</strong>
+            </td>
+            <td>
+                <strong>{{ total }}</strong>
+            </td>
+            <td>
+                <strong>{{totalcgst}}</strong>
+            </td>
+            <td>
+                <strong>{{totalsgst}}</strong>
+            </td>
+        </tr>
 
     </table>
+
     <dir-pagination-controls max-size="5" direction-links="true" boundary-links="true">
     </dir-pagination-controls>
+    <br/>
+
+
+    <div id="exportable" style="visibility: hidden">
+        <table class="table table-striped table-hover">
+            <thead class="tableheader">
+                <tr>
+                    <th>#</th>
+
+                    <th ng-click="sort('createdDate')">Time
+                        <span class="glyphicon sort-icon" ng-show="sortKey=='createdDate'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                    </th>
+                    <th ng-click="sort('totalcost')">Amount (Rs.)
+                        <span class="glyphicon sort-icon" ng-show="sortKey=='totalcost'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                    </th>
+                    <th ng-click="sort('sgst')">SGST (Rs.)
+                        <span class="glyphicon sort-icon" ng-show="sortKey=='sgst'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                    </th>
+                    <th ng-click="sort('cgst')">CGST (Rs.)
+                        <span class="glyphicon sort-icon" ng-show="sortKey=='cgst'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                    </th>
+                </tr>
+            </thead>
+            <tr ng-repeat="tran in report.transactions|orderBy:sortKey:reverse|filter:search">
+                <td>{{$index+1}}</td>
+                <td>{{tran.createdDate | date:'medium'}}</td>
+                <td>{{tran.totalcost}}</td>
+                <td>{{tran.sgst}}</td>
+                <td>{{tran.cgst}}</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <strong>Total :</strong>
+                </td>
+                <td>
+                    <strong>{{ total }}</strong>
+                </td>
+                <td>
+                    <strong>{{totalcgst}}</strong>
+                </td>
+                <td>
+                    <strong>{{totalsgst}}</strong>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</div>
 </div>
 
 <div class="text-center" ng-show="report.loading">

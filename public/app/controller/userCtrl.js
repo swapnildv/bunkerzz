@@ -1,22 +1,55 @@
 angular.module('userController', ['userServices'])
-    .controller('regCtrl', function ($http, $location, $timeout, User) {
+    .controller('regCtrl', function ($http, $location, $timeout, User, $routeParams,$scope) {
 
         var app = this;
+        this.showCreateForm = false;
+        app.roles = ['user', 'moderator'];
+        //get cafe wise users.
+        app.getUsersByCafeId = function () {
+            if ($routeParams.cafeid) {
+                app.loading = true;
+                app.errMsg = false;
+                app.succMsg = false;
+                User.getUsersByCafe($routeParams.cafeid).then(function (data) {
+                    if (data.data.success) {
+                        app.loading = false;
+                        app.users = data.data.users;
+                    } else {
+                        app.loading = false;
+                        app.errMsg = data.data.message;
+                    }
+                });
+            }
+        }
+
+        app.getUsersByCafeId();
+
         this.regUser = function (regData, valid) {
+
             app.loading = true;
             app.errMsg = false;
             app.succMsg = false;
+            //set cafeid.
+            if ($routeParams.cafeid) {
+                app.regData.cafeid = $routeParams.cafeid;
+            }
+            console.log(app.regData);
             if (valid) {
                 User.create(app.regData)
                     .then(function (data) {
                         app.loading = false;
                         if (data.data.success) {
-                            //create success mesage
-                            //Redirect to home page.
-                            app.succMsg = data.data.message + "...Redirecting";
-                            $timeout(function () {
-                                $location.path('/');
-                            }, 2000);
+                            app.succMsg = data.data.message;
+
+                            app.regData = {};
+                            $scope.regForm.$setPristine();
+                            $scope.confirm = '';
+                            $scope.firstpassword = '';
+                            app.getUsersByCafeId();
+                            app.showCreateForm = false;
+                            // $timeout(function () {
+                            //     $location.path('/');
+                            // }, 2000);
 
                         }
                         else {
@@ -28,6 +61,14 @@ angular.module('userController', ['userServices'])
                 app.loading = false;
                 app.errMsg = "Please ensure form is filled properly";
             }
+        }
+
+        app.createUserButton = function () {
+            this.showCreateForm = true;
+        }
+
+        app.cancelCreate = function () {
+            this.showCreateForm = false;
         }
 
 

@@ -45,6 +45,12 @@ angular.module('managementController', ['userServices', 'managementServices'])
                 if (data.data.success) {
                     if (data.data.permission === 'admin') {
                         app.cafes = data.data.cafes;
+                        if (app.cafes.length > 0)
+                            app.showCreateForm = false;
+                        else {
+                            app.showCreateForm = true;
+                            app.FormMode = 'create';
+                        }
                         app.loading = false;
                     } else {
                         app.errorMsg = "Insifficient permissions.";
@@ -59,33 +65,77 @@ angular.module('managementController', ['userServices', 'managementServices'])
         }
         app.getCafes();
 
+        app.cancelForm = function () {
+            app.showCreateForm = false;
+            app.cafeData = {};
+            app.FormMode = '';
+        }
+
+        app.createCafeButton = function () {
+            app.showCreateForm = true;
+            app.errMsg = false;
+            app.succMsg = false;
+            app.FormMode = 'create';
+        }
+
+        app.editCafeButton = function (editCafeData) {
+            app.showCreateForm = true;
+            app.cafeData = editCafeData;
+            app.FormMode = 'edit';
+        }
+
         app.addCafe = function (cafeData, valid) {
             app.loading = true;
             app.errMsg = false;
             app.succMsg = false;
+            if (app.FormMode == 'create') {
 
-            if (valid) {
-                Management.create(app.cafeData)
-                    .then(function (data) {
-                        app.loading = false;
-                        if (data.data.success) {
-                            app.succMsg = data.data.message;
-                            app.getCafes();
-                            app.showCreateForm = false;
-                            app.cafeData = {};
-                            $scope.cafeForm.$setPristine();
-                        }
-                        else {
-                            //Create error message
-                            app.errMsg = data.data.message;
+                if (valid) {
+                    Management.create(app.cafeData)
+                        .then(function (data) {
+                            app.loading = false;
+                            if (data.data.success) {
+                                app.succMsg = data.data.message;
+                                app.getCafes();
+                                app.showCreateForm = false;
+                                app.cafeData = {};
+                                $scope.cafeForm.$setPristine();
+                            }
+                            else {
+                                //Create error message
+                                app.errMsg = data.data.message;
 
-                        }
-                    });
-            } else {
-                app.loading = false;
-                app.errMsg = "Please ensure form is filled properly";
+                            }
+                        });
+                } else {
+                    app.loading = false;
+                    app.errMsg = "Please ensure form is filled properly";
+                }
             }
+            else if (app.FormMode == 'edit') {
 
+                if (valid) {
+                    Management.updateCafe(app.cafeData)
+                        .then(function (data) {
+                            app.loading = false;
+                            if (data.data.success) {
+                                app.succMsg = data.data.message;
+                                app.getCafes();
+                                app.showCreateForm = false;
+                                app.cafeData = {};
+                                $scope.cafeForm.$setPristine();
+                            }
+                            else {
+                                //Create error message
+                                app.errMsg = data.data.message;
+
+                            }
+                        });
+                } else {
+                    app.loading = false;
+                    app.errMsg = "Please ensure form is filled properly";
+                }
+            }
         }
 
     }).controller('menuCtrl', function (Management, $routeParams, $scope) {
@@ -98,6 +148,7 @@ angular.module('managementController', ['userServices', 'managementServices'])
         app.showCreateForm = false;
         app.menuEditMode = false;
         app.editing = false;
+        app.submenuediting = false;
         app.isActiveOptions = [true, false];
 
         app.getMenus = function () {
@@ -149,12 +200,26 @@ angular.module('managementController', ['userServices', 'managementServices'])
             app.newField = angular.copy(menu);
         }
 
+        app.submenumenuEdit = function (submenu, mainmenu) {
+            app.submenucancelUpdate(mainmenu);
+            submenu.EditMode = !submenu.EditMode;
+            app.submenuediting = mainmenu.submenus.indexOf(submenu);
+            app.submenunewField = angular.copy(submenu);
+        }
+
+        app.submenucancelUpdate = function (mainmenu) {
+            if (app.submenuediting !== false) {
+                app.submenunewField.EditMode = !app.submenunewField.EditMode;
+                mainmenu.submenus[app.submenuediting] = app.submenunewField;
+                app.submenunewField = false;
+            }
+
+        }
 
         app.menuUpdate = function (menu) {
             app.loading = true;
             app.errMsg = false;
             app.succMsg = false;
-
             Management.updateMenuById(menu)
                 .then(function (data) {
                     app.loading = false;
@@ -165,6 +230,7 @@ angular.module('managementController', ['userServices', 'managementServices'])
                         app.menuData = {};
                         app.bufferMenu = {};
                         app.editing = false;
+                        app.submenuediting = false;
                         $scope.menuForm.$setPristine();
                     }
                     else {

@@ -7,6 +7,11 @@ angular.module('userServices', [])
             return $http.post('/api/users', regData)
         }
 
+        //User.getUsersByCafe(cafeid)
+        userFactory.getUsersByCafe = function (cafeid) {
+            return $http.get('/api/users/' + cafeid)
+        }
+
         //User.checkUsername(regData)
         userFactory.checkUsername = function (regData) {
             return $http.post('/api/checkusername', regData)
