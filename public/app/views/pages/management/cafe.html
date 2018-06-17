@@ -1,4 +1,4 @@
-<div class="panel panel-primary">
+<div ng-show="!cafe.showCreateForm" class="panel panel-primary">
     <div class="panel-heading">
         <strong>Cafe Management</strong>
     </div>
@@ -44,16 +44,15 @@
             </ul>
         </div>
         <br>
-        <div ng-class="{'has-success':(cafeForm.address.$valid && !cafeForm.address.$pristine),'has-error':(!cafeForm.address.$valid && !cafeForm.address.$pristine) || (!cafeForm.address.$valid && cafeForm.$submitted)}">
-            <label>Address :</label>
-            <input class="form-control" type="text" name="address" placeholder="Please enter address" ng-model="cafe.cafeData.address"
-                required>
-            <p class="help-block" ng-show="(!cafeForm.address.$pristine && cafeForm.address.$error.required) || (cafeForm.$submitted && cafeForm.address.$error.required)">This field is required</p>
-            <!-- <ul class="help-block" ng-show="(!cafeForm.address.$pristine && cafeForm.address.$error.pattern)">
-            <li>Must contain @.</li>
-            <li>Must not contain any special characters.</li>
-        </ul> -->
+        <div class="row">
+            <div class="col-md-4" ng-class="{'has-success':(cafeForm.address.$valid && !cafeForm.address.$pristine),'has-error':(!cafeForm.address.$valid && !cafeForm.address.$pristine) || (!cafeForm.address.$valid && cafeForm.$submitted)}">
+                <label>Address :</label>
+                <input class="form-control" type="text" name="address" placeholder="Please enter address" ng-model="cafe.cafeData.address"
+                    required>
+                <p class="help-block" ng-show="(!cafeForm.address.$pristine && cafeForm.address.$error.required) || (cafeForm.$submitted && cafeForm.address.$error.required)">This field is required</p>
+            </div>
         </div>
+
         <br>
         <button class="btn btn-primary" type="submit">Submit</button>
         <button class="btn btn-primary" type="button" ng-click="cafe.showCreateForm = false">Cancel</button>
